@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -12,20 +13,41 @@ public class Launcher : MonoBehaviourPunCallbacks
     private string roomName = "EpicRoom";
     private string gameVersion = "1";
 
+    [SerializeField] private GameObject controlPanel;
+    [SerializeField] private GameObject progressLabel;
+
+    private bool isConnecting;
+
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        progressLabel.SetActive(false);
+        controlPanel.SetActive(true);
     }
 
     public void ConnectToPhoton()
     {
+        progressLabel.SetActive(true);
+        controlPanel.SetActive(false);
+
         PhotonNetwork.GameVersion = gameVersion;
-        PhotonNetwork.ConnectUsingSettings();
+
+        if (PhotonNetwork.IsConnected)
+        {
+            JoinRoom();
+        }
+        else
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            isConnecting = true;
+        }
+        
     }
 
     public void JoinRoom()
     {
-        if (PhotonNetwork.IsConnected)
+        if (isConnecting)
         {
             Debug.Log("Connected! Creating/Joining room " + roomName);
 
@@ -33,20 +55,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             RoomOptions roomOptions = new RoomOptions();
             TypedLobby typedLobby = new TypedLobby(roomName, LobbyType.Default);
             PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
+            isConnecting = false;
         }
     }
 
-    public void LoadArena()
-    {
-        if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
-        {
-            PhotonNetwork.LoadLevel("MainArena");
-        }
-        else
-        {
-            
-        }
-    }
+
 
     public override void OnConnectedToMaster()
     {
@@ -66,5 +79,20 @@ public class Launcher : MonoBehaviourPunCallbacks
             players += player.Value.NickName + " ";
         }
         Debug.Log(PhotonNetwork.CurrentRoom.Name + ": " + players);
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            Debug.Log("We load 'Room for 1'");
+
+            PhotonNetwork.LoadLevel("Room for 1");
+        }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+
+        progressLabel.SetActive(false);
+        controlPanel.SetActive(true);
     }
 }
