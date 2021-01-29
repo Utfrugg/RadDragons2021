@@ -7,6 +7,21 @@ using UnityEngine.SceneManagement;
 
 public class RoomHandler : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private GameObject playerPrefab;
+
+    void Start()
+    {
+        if (SimplePlayerController.LocalPlayerInstance == null)
+        {
+            PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+        }
+        else
+        {
+            Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+        }
+        
+    }
+
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(0);
@@ -53,4 +68,6 @@ public class RoomHandler : MonoBehaviourPunCallbacks
             LoadArena();
         }
     }
+
+
 }
