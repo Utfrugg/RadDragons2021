@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public TreasureCollider treasureColliderInRange = null;
     public int treasuresDugUp = 0;
 
+#if DEBUG
+    [SerializeField] private bool dontDoSplitScreen = true;
+#endif
+
     void Awake()
     {
         playerCam = GetComponentInChildren<Camera>();
@@ -57,6 +61,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         TotalAmountOfPlayers++;
+#if DEBUG
+        if (!dontDoSplitScreen) { 
+#endif
         Vector2 screenDimension = new Vector2(0.5f, 0.5f);
         switch (TotalAmountOfPlayers)
         {
@@ -77,8 +84,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 break;
         }
 
-
-        cube.SetActive(false);
+#if DEBUG
+        
+        }
+#endif
+            cube.SetActive(false);
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
