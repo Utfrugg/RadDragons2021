@@ -11,8 +11,6 @@ public class ScreenDivisions
     public static readonly Vector2 TopRight = new Vector2(0.5f, 0.5f);
 }
 
-
-
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -76,10 +74,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         //Disabled for debug for now
         //Cursor.lockState = CursorLockMode.Locked;
-
-#if UNITY_5_4_OR_NEWER
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
-#endif
     }
 
     // Update is called once per frame
@@ -155,34 +149,4 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             this.isFiring = (bool) stream.ReceiveNext();
         }
     }
-
-#if UNITY_5_4_OR_NEWER
-    void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadingMode)
-    {
-        this.CalledOnLevelWasLoaded(scene.buildIndex);
-    }
-#endif
-
-#if !UNITY_5_4_OR_NEWER
-    void OnLevelWasLoaded(int level)
-    {
-        this.CalledOnLevelWasLoaded(level);
-    }
-#endif
-
-    void CalledOnLevelWasLoaded(int level)
-    {
-        if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
-        {
-            transform.position = new Vector3(0f, 5f, 0f);
-        }
-    }
-
-#if UNITY_5_4_OR_NEWER
-    public override void OnDisable()
-    {
-        base.OnDisable();
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-#endif
 }
