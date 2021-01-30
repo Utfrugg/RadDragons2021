@@ -17,7 +17,7 @@ public class TreasureSpawner : MonoBehaviourPunCallbacks
         foreach (var player in PhotonNetwork.PlayerList)
         {
             //Spawn the treasures somewhere
-            treasures.Add(player, SpawnTreasure());
+            //treasures.Add(player, SpawnTreasure());
         }
     }
 
@@ -37,14 +37,16 @@ public class TreasureSpawner : MonoBehaviourPunCallbacks
                     //Despawn the Treasure
 
                     //Spawn a new Treasure
-                    treasures[treasure.Key] = SpawnTreasure();
+                   // treasures[treasure.Key] = SpawnTreasure();
                     break;
             }
         }
     }
 
-    private TreasureCollider SpawnTreasure()
+    public TreasureCollider SpawnTreasure(Vector3 Pos)
     {
-        return Instantiate(treasurePrefab).GetComponent<TreasureCollider>();
+        TreasureCollider newTreasure = Instantiate(treasurePrefab).GetComponent<TreasureCollider>();
+        newTreasure.transform.position = Pos;
+        return newTreasure;
     }
 }

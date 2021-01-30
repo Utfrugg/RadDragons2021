@@ -8,6 +8,7 @@ public class CreateMapTextures : MonoBehaviour
     public float CameraHeightOffset;
     private Queue<TreasureData> maps = new Queue<TreasureData>();
 
+
     Camera CameraComponent;
     // Start is called before the first frame update
     void Awake()
