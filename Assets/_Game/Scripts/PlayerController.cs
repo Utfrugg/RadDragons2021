@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         //Disabled for debug for now
         //Cursor.lockState = CursorLockMode.Locked;
-        if (SceneManager.GetActiveScene().name == "LobbyRoom")
+        if (SceneManager.GetActiveScene().name == "GameplayScene")
         {
             GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
         }
