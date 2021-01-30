@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.SceneManagement;
 public class TreasureMap : MonoBehaviour
 {
 
@@ -22,7 +22,8 @@ public class TreasureMap : MonoBehaviour
         newMaterial.SetTexture("_MainTex", mapTexture);
         GetComponent<Renderer>().sharedMaterial = newMaterial;
 
-        GenerateNewTreasure();
+        if (SceneManager.GetActiveScene().name != "LobbyRoom")
+            GenerateNewTreasure();
     }
 
     public void GenerateNewTreasure() {
