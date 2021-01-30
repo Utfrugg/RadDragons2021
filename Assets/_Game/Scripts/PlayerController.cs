@@ -216,9 +216,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (PhotonNetwork.LevelLoadingProgress <= 0f)
             {
-                PhotonNetwork.LoadLevel("IslandScene");
+                PhotonNetwork.LoadLevel("GameplayScene");
             }
         }
+
+        this.transform.position = new Vector3(this.transform.position.x, 10f, this.transform.position.z);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
