@@ -22,4 +22,12 @@ public class ReadyUpArea : MonoBehaviour
             }
         }
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.TryGetComponent(out PlayerController player))
+        {
+            playersReady--;
+        }
+    }
 }
