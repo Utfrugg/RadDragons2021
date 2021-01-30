@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private float gravity = -20f;
 
-    [SerializeField] private GameObject cube;
+    [SerializeField] private GameObject map;
     private bool isFiring = false;
 
     private bool grounded = false;
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         
         }
 #endif
-            cube.SetActive(false);
+        map.SetActive(false);
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
@@ -103,9 +103,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         //TODO Use this system to show the map. This way it shows up everywhere
-        if (isFiring != cube.activeInHierarchy)
+        if (isFiring != map.activeInHierarchy)
         {
-            cube.SetActive(isFiring);
+            map.SetActive(isFiring);
         }
 
         playerCam.transform.localRotation = cameraRotation;

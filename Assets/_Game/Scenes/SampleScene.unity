@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.2850269, g: 0.3713935, b: 0.49601045, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -226,6 +226,14 @@ PrefabInstance:
       propertyPath: frustumSettings.qualitySettings
       value: 
       objectReference: {fileID: 161245743}
+    - target: {fileID: 3575068006617702911, guid: c8e6c054662a72b4bb8c5e94d9f1832f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4458837221767872202, guid: c8e6c054662a72b4bb8c5e94d9f1832f, type: 3}
+      propertyPath: dontDoSplitScreen
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4458837221767872203, guid: c8e6c054662a72b4bb8c5e94d9f1832f, type: 3}
       propertyPath: m_RootOrder
       value: 1
