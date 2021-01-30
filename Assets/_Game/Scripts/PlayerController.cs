@@ -38,6 +38,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private bool grounded = false;
     private Vector3 velocity = Vector3.zero;
 
+    public TreasureCollider treasureColliderInRange = null;
+    public int treasuresDugUp = 0;
+
+#if DEBUG
+    [SerializeField] private bool dontDoSplitScreen = true;
+#endif
+
     void Awake()
     {
         playerCam = GetComponentInChildren<Camera>();
@@ -54,6 +61,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         TotalAmountOfPlayers++;
+#if DEBUG
+        if (!dontDoSplitScreen) { 
+#endif
         Vector2 screenDimension = new Vector2(0.5f, 0.5f);
         switch (TotalAmountOfPlayers)
         {
@@ -74,8 +84,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 break;
         }
 
-
-        cube.SetActive(false);
+#if DEBUG
+        
+        }
+#endif
+            cube.SetActive(false);
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
@@ -104,7 +117,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         UpdatePlayerPosition();
         UpdateCameraAngle();
-        UpdatePlayerFire1();
+        UpdatePlayerFire1(); //Looking at maps
+        UpdatePlayerFire2(); //Digging up treasure
     }
 
     private void UpdateCameraAngle()
@@ -145,6 +159,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         ccontr.Move(velocity * Time.deltaTime);
     }
 
+    //Looking at Map
     private void UpdatePlayerFire1()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -160,6 +175,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (isFiring)
             {
                 isFiring = false;
+            }
+        }
+    }
+
+    //Digging
+    private void UpdatePlayerFire2()
+    {
+        if (Input.GetButtonDown("Fire2"))
+        {
+            if (treasureColliderInRange != null)
+            {
+                treasureColliderInRange.DigUp();
+                treasuresDugUp++;
             }
         }
     }
