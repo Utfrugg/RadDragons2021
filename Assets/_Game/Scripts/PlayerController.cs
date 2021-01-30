@@ -28,9 +28,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private float xRotation = 0f; //Needed for the camera angle calculation
 
     [SerializeField] private float mouseSensitivity = 100f;
+    [SerializeField] private float jumpHeight = 3f;
+    [SerializeField] private float gravity = -20f;
 
     [SerializeField] private GameObject cube;
     private bool isFiring = false;
+
+    private bool grounded = false;
+    private Vector3 velocity = Vector3.zero;
 
     void Awake()
     {
@@ -113,12 +118,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void UpdatePlayerPosition()
     {
+        grounded = ccontr.isGrounded;
+
+        if (grounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
 
         ccontr.Move(move * speed * Time.deltaTime);
+
+        if (Input.GetButtonDown("Jump") && grounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+
+        ccontr.Move(velocity * Time.deltaTime);
     }
 
     private void UpdatePlayerFire1()
