@@ -14,7 +14,7 @@ public class CreateMapTextures : MonoBehaviour
     void Awake()
     {
         CameraComponent = GetComponent<Camera>();
-        CameraComponent.targetTexture = null;
+        CameraComponent.enabled = false;
     }
 
     void Start()
@@ -31,6 +31,7 @@ public class CreateMapTextures : MonoBehaviour
     {
         if (maps.Count > 0)
         {
+            CameraComponent.enabled = true;
             TreasureData currentMap = maps.Peek();
             this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
             this.GetComponent<Camera>().targetTexture = currentMap.mapTexture;
@@ -39,11 +40,10 @@ public class CreateMapTextures : MonoBehaviour
 
     private void OnCameraPostRender(ScriptableRenderContext context, Camera[] camera)
     {
-        if (CameraComponent.targetTexture != null) {
-          // CameraComponent.targetTexture = null;
+        if (CameraComponent.enabled) {
+            CameraComponent.enabled = false;
             TreasureData currentMap = maps.Peek();
-            currentMap.status = TreasureStatus.Hidden;
-            maps.Enqueue(currentMap);
+            currentMap.state = TreasureState.MAPGENERATED;
             maps.Dequeue();
         }
 
