@@ -26,9 +26,9 @@ public class TreasureSpawner : MonoBehaviourPunCallbacks
     {
         foreach (var treasure in treasures)
         {
-            switch (treasure.Value.state)
+            switch (treasure.Value.data.state)
             {
-                case TreasureState.HIDDEN:
+                case TreasureState.MAPGENERATED:
                     break;
                 case TreasureState.DIGGING:
                     
@@ -43,10 +43,11 @@ public class TreasureSpawner : MonoBehaviourPunCallbacks
         }
     }
 
-    public TreasureCollider SpawnTreasure(Vector3 Pos)
+    public TreasureCollider SpawnTreasure(TreasureData data)
     {
         TreasureCollider newTreasure = Instantiate(treasurePrefab).GetComponent<TreasureCollider>();
-        newTreasure.transform.position = Pos;
+        newTreasure.data = data;
+        newTreasure.transform.position = data.TreasurePosition;
         return newTreasure;
     }
 }

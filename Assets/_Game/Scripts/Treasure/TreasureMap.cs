@@ -5,39 +5,36 @@ using UnityEngine.AI;
 
 public class TreasureMap : MonoBehaviour
 {
-    public Camera MapCaptureCam;
+
 
     private RenderTexture mapTexture;
     TreasureData CurrentTreasure;
-    public TreasureSpawner treasureSpawn;
+    private CreateMapTextures MapCaptureCam;
+    private TreasureSpawner treasureSpawn;
     // Start is called before the first frame update
 
     void Start()
     {
         treasureSpawn = GameObject.FindObjectOfType<TreasureSpawner>();
+        MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
         mapTexture = new RenderTexture(256,256,16);
         Material newMaterial = new Material(Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default"));
         newMaterial.SetTexture("_MainTex", mapTexture);
         GetComponent<Renderer>().sharedMaterial = newMaterial;
 
-        Vector3 randomPos = Random.insideUnitSphere * 40; //0;
-
-        NavMeshHit hit; // NavMesh Sampling Info Container
-
-        // from randomPos find a nearest point on NavMesh surface in range of maxDistance
-        NavMesh.SamplePosition(randomPos, out hit, 40, NavMesh.AllAreas);
-        GenerateNewTreasure(hit.position);
+        GenerateNewTreasure();
     }
 
-    void GenerateNewTreasure(Vector3 position) {
-        treasureSpawn.SpawnTreasure(position);
-        CurrentTreasure = new TreasureData(position, 0, mapTexture);
-        MapCaptureCam.GetComponent<CreateMapTextures>().QueueMapGenerate(CurrentTreasure);
+    public void GenerateNewTreasure() {
+        Vector3 randomPos = Random.insideUnitSphere * 40;
 
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomPos, out hit, 90, NavMesh.AllAreas);
 
+        CurrentTreasure = new TreasureData(hit.position, this, mapTexture);
+        treasureSpawn.SpawnTreasure(CurrentTreasure);
+        MapCaptureCam.QueueMapGenerate(CurrentTreasure);
     }
-
-
 
     
 
