@@ -29,24 +29,23 @@ public class CreateMapTextures : MonoBehaviour
     }
     private void OnCameraPreRender(ScriptableRenderContext context, Camera[] camera)
     {
-        if (maps.Count > 0)
-        {
-            CameraComponent.enabled = true;
-            TreasureData currentMap = maps.Peek();
-            this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
-            this.GetComponent<Camera>().targetTexture = currentMap.mapTexture;
-        }
+
     }
 
     private void OnCameraPostRender(ScriptableRenderContext context, Camera[] camera)
     {
+
         if (CameraComponent.enabled) {
             CameraComponent.enabled = false;
+        }
+        if (maps.Count > 0)
+        {
             TreasureData currentMap = maps.Peek();
-            currentMap.state = TreasureState.MAPGENERATED;
+            CameraComponent.enabled = true;
+            this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
+            this.GetComponent<Camera>().targetTexture = currentMap.mapTexture;
             maps.Dequeue();
         }
-
     }
 
     void OnDestroy()
