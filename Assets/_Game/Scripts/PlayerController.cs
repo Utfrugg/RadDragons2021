@@ -219,6 +219,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.LoadLevel("IslandScene");
             }
         }
+
+        this.transform.position = new Vector3(this.transform.position.x, 10f, this.transform.position.z);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
