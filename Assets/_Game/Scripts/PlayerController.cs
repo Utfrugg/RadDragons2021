@@ -122,7 +122,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         Vector2 animVelocity = new Vector2(velocity.x, velocity.z);
         animStC.UpdateMoveAnim(animVelocity.magnitude * 10);
-        Debug.Log(animVelocity.magnitude);
 
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
@@ -213,9 +212,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void LoadGameScene()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.LocalPlayer.IsMasterClient && LocalPlayerInstance == this.gameObject)
         {
-            PhotonNetwork.LoadLevel("SampleScene");
+            if (PhotonNetwork.LevelLoadingProgress <= 0f)
+            {
+                PhotonNetwork.LoadLevel("IslandScene");
+            }
         }
     }
 
