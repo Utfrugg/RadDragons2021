@@ -74,6 +74,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         //Disabled for debug for now
         //Cursor.lockState = CursorLockMode.Locked;
+
+        GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
     }
 
     // Update is called once per frame
@@ -135,6 +137,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 isFiring = false;
             }
+        }
+    }
+
+    private void LoadGameScene()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("SampleScene");
         }
     }
 

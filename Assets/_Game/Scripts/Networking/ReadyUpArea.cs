@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ReadyUpArea : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int playersReady = 0;
+    public int playersNeeded = 2;
+    public UnityEvent onAllPlayersReady = new UnityEvent();
+    
+    void OnTriggerEnter(Collider other)
     {
-        
-    }
+        if (other.TryGetComponent(out PlayerController player))
+        {
+            playersReady++;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+            if (playersReady == playersNeeded)
+            {
+                //Load the next scene
+                onAllPlayersReady.Invoke();
+            }
+        }
     }
 }
