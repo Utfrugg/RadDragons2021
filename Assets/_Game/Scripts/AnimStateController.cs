@@ -9,12 +9,11 @@ public class AnimStateController : MonoBehaviour
 {
     // Initialize
     private Animator animator;
-    private PlayerController playerController;
 
 
     // Hash
     private int velocityHash;
-    private int attackHash;
+    private int diggingHash;
     private int deathHash;
     private int castHash;
 
@@ -28,7 +27,7 @@ public class AnimStateController : MonoBehaviour
     {
         // Increase performance
         velocityHash = Animator.StringToHash("Velocity");
-        attackHash = Animator.StringToHash("A_GenericAttackWeapon01");
+        diggingHash = Animator.StringToHash("A_Digging");
         deathHash = Animator.StringToHash("A_GenericDeath01");
         castHash = Animator.StringToHash("A_GenericCast01");
     }
@@ -44,9 +43,9 @@ public class AnimStateController : MonoBehaviour
         animator.SetFloat(velocityHash, vel);
     }
 
-    public void StartAttackAnim()
+    public void StartDiggingAnim()
     {
-        animator.Play(attackHash);
+        animator.Play(diggingHash);
     }
 
     public void StartDeathAnim()

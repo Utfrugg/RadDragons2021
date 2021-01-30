@@ -33,7 +33,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float gravity = -20f;
 
     [SerializeField] private GameObject map;
-    private bool isFiring = false;
+    private bool isLookingAtMap = false;
+    private bool startDigging = false;
 
     private bool grounded = false;
     private Vector3 velocity = Vector3.zero;
@@ -41,12 +42,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public TreasureCollider treasureColliderInRange = null;
     public int treasuresDugUp = 0;
 
+    private AnimStateController animStC;
+
 #if DEBUG
     [SerializeField] private bool dontDoSplitScreen = true;
 #endif
 
     void Awake()
     {
+        animStC = GetComponentInChildren<AnimStateController>();
         playerCam = GetComponentInChildren<Camera>();
         photonView = GetComponent<PhotonView>();
         if (photonView.IsMine)
@@ -103,12 +107,22 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         //TODO Use this system to show the map. This way it shows up everywhere
-        if (isFiring != map.activeInHierarchy)
+        if (isLookingAtMap != map.activeInHierarchy)
         {
-            map.SetActive(isFiring);
+            map.SetActive(isLookingAtMap);
+        }
+
+        if (startDigging)
+        {
+            animStC.StartDiggingAnim();
+            startDigging = false;
         }
 
         playerCam.transform.localRotation = cameraRotation;
+
+        Vector2 animVelocity = new Vector2(velocity.x, velocity.z);
+        animStC.UpdateMoveAnim(animVelocity.magnitude * 10);
+        Debug.Log(animVelocity.magnitude);
 
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
@@ -117,8 +131,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         UpdatePlayerPosition();
         UpdateCameraAngle();
-        UpdatePlayerFire1(); //Looking at maps
-        UpdatePlayerFire2(); //Digging up treasure
+        UpdatePlayerMap(); //Looking at maps
+        UpdatePlayerDig(); //Digging up treasure
     }
 
     private void UpdateCameraAngle()
@@ -149,6 +163,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         ccontr.Move(move * speed * Time.deltaTime);
 
+        velocity.x = move.x * speed * Time.deltaTime;
+        velocity.z = move.z * speed * Time.deltaTime;
+
         if (Input.GetButtonDown("Jump") && grounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
@@ -160,30 +177,32 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     //Looking at Map
-    private void UpdatePlayerFire1()
+    private void UpdatePlayerMap()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            if (!isFiring)
+            if (!isLookingAtMap)
             {
-                isFiring = true;
+                isLookingAtMap = true;
             }
         }
 
         if (Input.GetButtonUp("Fire1"))
         {
-            if (isFiring)
+            if (isLookingAtMap)
             {
-                isFiring = false;
+                isLookingAtMap = false;
             }
         }
     }
 
     //Digging
-    private void UpdatePlayerFire2()
+    private void UpdatePlayerDig()
     {
         if (Input.GetButtonDown("Fire2"))
         {
+            startDigging = true;
+
             if (treasureColliderInRange != null)
             {
                 treasureColliderInRange.DigUp();
@@ -204,11 +223,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(isFiring);
+            stream.SendNext(isLookingAtMap);
         }
         else
         {
-            this.isFiring = (bool) stream.ReceiveNext();
+            this.isLookingAtMap = (bool) stream.ReceiveNext();
         }
     }
 }
