@@ -45,9 +45,8 @@ public class TreasureSpawner : MonoBehaviourPunCallbacks
 
     public TreasureCollider SpawnTreasure(TreasureData data)
     {
-        TreasureCollider newTreasure = Instantiate(treasurePrefab).GetComponent<TreasureCollider>();
+        TreasureCollider newTreasure = PhotonNetwork.Instantiate("Treasure", data.TreasurePosition, Quaternion.identity).GetComponent<TreasureCollider>();
         newTreasure.data = data;
-        newTreasure.transform.position = data.TreasurePosition;
         return newTreasure;
     }
 }
