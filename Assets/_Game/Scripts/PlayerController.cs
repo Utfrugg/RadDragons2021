@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         //Disabled for debug for now
         //Cursor.lockState = CursorLockMode.Locked;
-        if (SceneManager.GetActiveScene().name == "GameplayScene")
+        if (SceneManager.GetActiveScene().name == "LobbyRoom")
         {
             GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
         }
@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (PhotonNetwork.LevelLoadingProgress <= 0f)
             {
-                PhotonNetwork.LoadLevel("IslandScene");
+                PhotonNetwork.LoadLevel("GameplayScene");
             }
         }
 
