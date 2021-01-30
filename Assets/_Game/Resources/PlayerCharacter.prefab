@@ -134,6 +134,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   mouseSensitivity: 100
+  jumpHeight: 3
+  gravity: -20
   cube: {fileID: 6902824206666685152}
 --- !u!114 &4587417666308127863
 MonoBehaviour:
