@@ -210,6 +210,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1424592542 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7231152332258979738, guid: c8e6c054662a72b4bb8c5e94d9f1832f, type: 3}
+  m_PrefabInstance: {fileID: 1788453225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1424592543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424592542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: isDead
+  - Type: 9
+    SynchronizeType: 1
+    Name: Digging
+  - Type: 1
+    SynchronizeType: 1
+    Name: Velocity
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
 --- !u!1 &1461412687 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1356664911259255495, guid: aac6c2ba5f948414da0f1dafdd430730, type: 3}

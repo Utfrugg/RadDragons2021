@@ -88,7 +88,7 @@ MonoBehaviour:
   map: {fileID: 3575068008304808417}
   treasureColliderInRange: {fileID: 0}
   treasuresDugUp: 0
-  dontDoSplitScreen: 1
+  dontDoSplitScreen: 0
 --- !u!114 &4587417666308127863
 MonoBehaviour:
   m_ObjectHideFlags: 0
