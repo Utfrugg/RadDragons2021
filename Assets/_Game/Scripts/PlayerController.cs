@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScreenDivisions
 {
@@ -79,8 +80,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         //Disabled for debug for now
         //Cursor.lockState = CursorLockMode.Locked;
-
-        GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
+        if (SceneManager.GetActiveScene().name == "LobbyRoom")
+        {
+            GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
+        }
     }
 
     // Update is called once per frame
