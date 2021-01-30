@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private bool grounded = false;
     private Vector3 velocity = Vector3.zero;
 
+    public TreasureCollider treasureColliderInRange = null;
+    public int treasuresDugUp = 0;
+
     void Awake()
     {
         playerCam = GetComponentInChildren<Camera>();
@@ -104,7 +107,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         UpdatePlayerPosition();
         UpdateCameraAngle();
-        UpdatePlayerFire1();
+        UpdatePlayerFire1(); //Looking at maps
+        UpdatePlayerFire2(); //Digging up treasure
     }
 
     private void UpdateCameraAngle()
@@ -145,6 +149,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         ccontr.Move(velocity * Time.deltaTime);
     }
 
+    //Looking at Map
     private void UpdatePlayerFire1()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -160,6 +165,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (isFiring)
             {
                 isFiring = false;
+            }
+        }
+    }
+
+    //Digging
+    private void UpdatePlayerFire2()
+    {
+        if (Input.GetButtonDown("Fire2"))
+        {
+            if (treasureColliderInRange != null)
+            {
+                treasureColliderInRange.DigUp();
+                treasuresDugUp++;
             }
         }
     }
