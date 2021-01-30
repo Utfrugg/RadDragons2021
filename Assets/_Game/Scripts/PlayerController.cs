@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class ScreenDivisions
 {
-    public static readonly Vector2 TopLeft = new Vector2(0,0);
-    public static readonly Vector2 TopRight = new Vector2(0.5f, 0);
-    public static readonly Vector2 BottomLeft = new Vector2(0, 0.5f);
-    public static readonly Vector2 BottomRight = new Vector2(0.5f, 0.5f);
+    public static readonly Vector2 BottomLeft = new Vector2(0,0);
+    public static readonly Vector2 BottomRight = new Vector2(0.5f, 0);
+    public static readonly Vector2 TopLeft = new Vector2(0, 0.5f);
+    public static readonly Vector2 TopRight = new Vector2(0.5f, 0.5f);
 }
 
 
