@@ -11,7 +11,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Store these settings in a separate class or struct perhaps
 
     private string roomName = "EpicRoom";
-    private string gameVersion = "2";
+    private string gameVersion = "3";
 
     [SerializeField] private GameObject controlPanel;
     [SerializeField] private GameObject progressLabel;
@@ -82,9 +82,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
-            Debug.Log("We load 'Room for 1'");
+            Debug.Log("We load The LobbyRoom");
 
-            PhotonNetwork.LoadLevel("Room for 1");
+            PhotonNetwork.LoadLevel("LobbyRoom");
         }
     }
 
