@@ -12,13 +12,13 @@ public class TreasureMap : MonoBehaviour
 
     void Start()
     {
-        mapTexture = new RenderTexture(256, 256, 16);
+        mapTexture = new RenderTexture(256,256,16);
         Material newMaterial = new Material(Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default"));
         newMaterial.SetTexture("_MainTex", mapTexture);
-        GetComponent<Renderer>().material = newMaterial;
+        GetComponent<Renderer>().sharedMaterial = newMaterial;
 
 
-        GenerateNewTreasure(new Vector3 (Random.Range(-10, 10), 0, Random.Range(-10, 10)));
+        GenerateNewTreasure(new Vector3 (Random.Range(-50, 50), 0, Random.Range(-50, 30)));
     }
 
     void GenerateNewTreasure(Vector3 position) {
