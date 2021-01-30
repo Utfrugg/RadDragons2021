@@ -11,9 +11,9 @@ public class RoomHandler : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        if (SimplePlayerController.LocalPlayerInstance == null)
+        if (PlayerController.LocalPlayerInstance == null)
         {
-            PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+            PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 2f, 0f), Quaternion.identity, 0);
         }
         else
         {

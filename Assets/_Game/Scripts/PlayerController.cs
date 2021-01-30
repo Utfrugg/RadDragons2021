@@ -3,13 +3,24 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
+public class ScreenDivisions
+{
+    public static readonly Vector2 TopLeft = new Vector2(0,0);
+    public static readonly Vector2 TopRight = new Vector2(0.5f, 0);
+    public static readonly Vector2 BottomLeft = new Vector2(0, 0.5f);
+    public static readonly Vector2 BottomRight = new Vector2(0.5f, 0.5f);
+}
+
+
+
 [RequireComponent(typeof(CharacterController))]
-public class SimplePlayerController : MonoBehaviourPunCallbacks, IPunObservable
+public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
     //TODO replace if possible
     public static GameObject LocalPlayerInstance;
+    public static int TotalAmountOfPlayers = 0;
 
-
+    private Camera playerCam;
     private CharacterController ccontr;
     private PhotonView photonView;
     private float speed = 10f;
@@ -19,10 +30,11 @@ public class SimplePlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
+        playerCam = GetComponentInChildren<Camera>();
         photonView = GetComponent<PhotonView>();
         if (photonView.IsMine)
         {
-            SimplePlayerController.LocalPlayerInstance = this.gameObject;
+            PlayerController.LocalPlayerInstance = this.gameObject;
         }
 
         DontDestroyOnLoad(this.gameObject);
@@ -31,6 +43,28 @@ public class SimplePlayerController : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
+        TotalAmountOfPlayers++;
+        Vector2 screenDimension = new Vector2(0.5f, 0.5f);
+        switch (TotalAmountOfPlayers)
+        {
+            case 1:
+                playerCam.rect = new Rect(ScreenDivisions.TopLeft, screenDimension);
+                break;
+            case 2:
+                playerCam.rect = new Rect(ScreenDivisions.TopRight, screenDimension);
+                break;
+            case 3:
+                playerCam.rect = new Rect(ScreenDivisions.BottomLeft, screenDimension);
+                break;
+            case 4:
+                playerCam.rect = new Rect(ScreenDivisions.BottomRight, screenDimension);
+                break;
+            default:
+                Debug.LogError("Too Many Players!");
+                break;
+        }
+
+
         cube.SetActive(false);
         ccontr = GetComponent<CharacterController>();
 
@@ -42,6 +76,7 @@ public class SimplePlayerController : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        //TODO Use this system to show the map. This way it shows up everywhere
         if (isFiring != cube.activeInHierarchy)
         {
             cube.SetActive(isFiring);
