@@ -16,15 +16,15 @@ public class CreateMapTextures : MonoBehaviour
 
     void Start()
     {
-        RenderPipelineManager.beginCameraRendering += OnPreRender;
-        RenderPipelineManager.endCameraRendering += OnPostRender;
+        RenderPipelineManager.beginCameraRendering += OnCameraPreRender;
+        RenderPipelineManager.endCameraRendering += OnCameraPostRender;
     }
 
 
     public void QueueMapGenerate(TreasureData mapToGen){
         maps.Enqueue(mapToGen);
     }
-    private void OnPreRender(ScriptableRenderContext context, Camera camera)
+    private void OnCameraPreRender(ScriptableRenderContext context, Camera camera)
     {
         if (maps.Count > 0 && CameraComponent == camera)
         {
@@ -34,7 +34,7 @@ public class CreateMapTextures : MonoBehaviour
         }
     }
 
-    private void OnPostRender(ScriptableRenderContext context, Camera camera)
+    private void OnCameraPostRender(ScriptableRenderContext context, Camera camera)
     {
         if (CameraComponent.targetTexture != null && CameraComponent == camera) {
             TreasureData currentMap = maps.Peek();
@@ -47,8 +47,8 @@ public class CreateMapTextures : MonoBehaviour
 
     void OnDestroy()
     {
-        RenderPipelineManager.beginCameraRendering -= OnPreRender;
-        RenderPipelineManager.endCameraRendering -= OnPostRender;
+        RenderPipelineManager.beginCameraRendering -= OnCameraPreRender;
+        RenderPipelineManager.endCameraRendering -= OnCameraPostRender;
     }
 
     // Update is called once per frame
