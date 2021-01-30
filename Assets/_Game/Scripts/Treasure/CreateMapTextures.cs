@@ -7,26 +7,28 @@ public class CreateMapTextures : MonoBehaviour
 {
     public float CameraHeightOffset;
     private Queue<TreasureData> maps = new Queue<TreasureData>();
+
     Camera CameraComponent;
     // Start is called before the first frame update
     void Awake()
     {
         CameraComponent = GetComponent<Camera>();
+        CameraComponent.targetTexture = null;
     }
 
     void Start()
     {
-        RenderPipelineManager.beginCameraRendering += OnCameraPreRender;
-        RenderPipelineManager.endCameraRendering += OnCameraPostRender;
+        RenderPipelineManager.beginFrameRendering += OnCameraPreRender;
+        RenderPipelineManager.endFrameRendering += OnCameraPostRender;
     }
 
 
     public void QueueMapGenerate(TreasureData mapToGen){
         maps.Enqueue(mapToGen);
     }
-    private void OnCameraPreRender(ScriptableRenderContext context, Camera camera)
+    private void OnCameraPreRender(ScriptableRenderContext context, Camera[] camera)
     {
-        if (maps.Count > 0 && CameraComponent == camera)
+        if (maps.Count > 0)
         {
             TreasureData currentMap = maps.Peek();
             this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
@@ -34,21 +36,22 @@ public class CreateMapTextures : MonoBehaviour
         }
     }
 
-    private void OnCameraPostRender(ScriptableRenderContext context, Camera camera)
+    private void OnCameraPostRender(ScriptableRenderContext context, Camera[] camera)
     {
-        if (CameraComponent.targetTexture != null && CameraComponent == camera) {
+        if (CameraComponent.targetTexture != null) {
+          // CameraComponent.targetTexture = null;
             TreasureData currentMap = maps.Peek();
             currentMap.status = TreasureStatus.Hidden;
+            maps.Enqueue(currentMap);
             maps.Dequeue();
-            CameraComponent.targetTexture = null;
         }
 
     }
 
     void OnDestroy()
     {
-        RenderPipelineManager.beginCameraRendering -= OnCameraPreRender;
-        RenderPipelineManager.endCameraRendering -= OnCameraPostRender;
+        RenderPipelineManager.beginFrameRendering -= OnCameraPreRender;
+        RenderPipelineManager.endFrameRendering -= OnCameraPostRender;
     }
 
     // Update is called once per frame
