@@ -132,6 +132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354610b0707268c44b635546c3fc3eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
+  mouseSensitivity: 100
   cube: {fileID: 6902824206666685152}
 --- !u!114 &4587417666308127863
 MonoBehaviour:
@@ -183,7 +185,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2854103868171358403}
   - component: {fileID: 4778033338491049954}
-  - component: {fileID: 6943298958898717533}
   - component: {fileID: 7388238777667966142}
   m_Layer: 0
   m_Name: PlayerCamera
@@ -249,14 +250,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &6943298958898717533
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6014547650764961255}
-  m_Enabled: 1
 --- !u!114 &7388238777667966142
 MonoBehaviour:
   m_ObjectHideFlags: 0

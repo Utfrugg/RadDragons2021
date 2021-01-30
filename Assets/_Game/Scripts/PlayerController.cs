@@ -20,10 +20,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public static GameObject LocalPlayerInstance;
     public static int TotalAmountOfPlayers = 0;
 
-    private Camera playerCam;
     private CharacterController ccontr;
     private PhotonView photonView;
-    private float speed = 10f;
+    [SerializeField] private float speed = 10f;
+
+    //Camera Values
+    private Camera playerCam;
+    private Quaternion cameraRotation = Quaternion.identity;
+    private float xRotation = 0f; //Needed for the camera angle calculation
+
+    [SerializeField] private float mouseSensitivity = 100f;
 
     [SerializeField] private GameObject cube;
     private bool isFiring = false;
@@ -68,6 +74,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         cube.SetActive(false);
         ccontr = GetComponent<CharacterController>();
 
+        //Disabled for debug for now
+        //Cursor.lockState = CursorLockMode.Locked;
+
 #if UNITY_5_4_OR_NEWER
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
 #endif
@@ -82,18 +91,42 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             cube.SetActive(isFiring);
         }
 
+        playerCam.transform.localRotation = cameraRotation;
+
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
             return;
         }
 
+        UpdatePlayerPosition();
+        UpdateCameraAngle();
+        UpdatePlayerFire1();
+    }
+
+    private void UpdateCameraAngle()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        cameraRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        this.transform.Rotate(Vector3.up * mouseX); //Rotate the player around the Y axis
+    }
+
+    private void UpdatePlayerPosition()
+    {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
 
         ccontr.Move(move * speed * Time.deltaTime);
+    }
 
+    private void UpdatePlayerFire1()
+    {
         if (Input.GetButtonDown("Fire1"))
         {
             if (!isFiring)
