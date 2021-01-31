@@ -56,6 +56,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.LocalPlayer.Equals(PhotonNetwork.MasterClient))
         {
             foreach (var treasure in treasureIndex) {
+                MapCaptureCam.QueueMapGenerate(treasure);
                 if (treasure.state == TreasureState.DUG_UP)
                 {
                     foreach (var dickpair in dick)
