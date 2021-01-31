@@ -123,6 +123,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         Vector2 animVelocity = new Vector2(velocity.x, velocity.z);
         animStC.UpdateMoveAnim(animVelocity.magnitude * 10);
 
+        if (photonView.CreatorActorNr != photonView.ControllerActorNr)
+            Debug.Log("CreateActorNR" + photonView.CreatorActorNr + "is NOT equal to ControllerCreatorNR" + photonView.ControllerActorNr);
+
+
+        foreach (var bonk in PhotonNetwork.PlayerList) {
+            if (bonk == PhotonNetwork.LocalPlayer)
+            {
+                Debug.Log("There is a localplayer with ID: " + bonk.ActorNumber);
+            }
+            if (bonk == PhotonNetwork.MasterClient)
+            {
+                Debug.Log("There is a masterplayer with ID: " + bonk.ActorNumber);
+            }
+            if (bonk != PhotonNetwork.LocalPlayer && bonk != PhotonNetwork.MasterClient)
+                Debug.Log("There is another with ID: " + bonk.ActorNumber);
+        }
+
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
             return;
