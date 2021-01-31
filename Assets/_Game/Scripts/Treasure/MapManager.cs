@@ -12,22 +12,27 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     private TreasureSpawner treasureSpawn;
     public int shouldSpawnTreasureForPlayer = -1;
 
+    private CreateMapTextures MapCaptureCam;
+
     void Awake()
     {
         treasureSpawn = GameObject.FindObjectOfType<TreasureSpawner>();
-        
+        MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
 
         PlayerController[] allPlayersInScene = FindObjectsOfType<PlayerController>();
         foreach (PlayerController player in allPlayersInScene) 
         {
             dick.Add(player.photonView.ControllerActorNr, player);
+            Debug.Log("<color=yellow>Playername: " + player.photonView.Controller.NickName + " id: " + player.photonView.ControllerActorNr + "</color>");
         }
 
         if (PhotonNetwork.LocalPlayer.Equals(PhotonNetwork.MasterClient))
         {
+            Debug.Log("GHamining hgared");
             foreach (var dickEntry in dick)
             {
                 GenerateNewTreasure(dickEntry);
+                MapCaptureCam.QueueMapGenerate(dickEntry.Value.currentTreasure);
             }
         }
     }
@@ -36,6 +41,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PhotonNetwork.LocalPlayer.Equals(PhotonNetwork.MasterClient))
         {
+            Debug.Log("Yo does this thing even work?");
             if (shouldSpawnTreasureForPlayer > 0)
             {
                 foreach (var dickpair in dick)
