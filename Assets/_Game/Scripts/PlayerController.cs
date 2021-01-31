@@ -23,8 +23,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private PhotonView photonView;
     [SerializeField] private float speed = 10f;
 
+    public int playersNeeded = 2;
     public bool amIloaded;
-    public bool[] playersLoaded = { false, false, false, false };
+    public static bool[] playersLoaded = { false, false, false, false };
 
     //Camera Values
     private Camera playerCam;
@@ -228,18 +229,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient)
             {
                 bool stillGood = true;
-                int goodCount = 4;
+                int goodCount = 0;
                 foreach (var goodbool in playersLoaded)
                 {
-                    if (stillGood == false || goodbool == false)
+                    if (goodbool == false)
                     {
                         stillGood = false;
-                        goodCount--;
+                        break;
                     }
+                    goodCount++;
                 }
 
-                Debug.Log(goodCount + "People loaded into the map");
-                mapManager.everybodyloaded = stillGood;
+                Debug.Log(goodCount + "/" + playersNeeded + "People loaded into the map");
+                if (goodCount >= playersNeeded) {
+                    mapManager.everybodyloaded = true;
+                }
             }
         }
 

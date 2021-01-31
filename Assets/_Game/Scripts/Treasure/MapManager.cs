@@ -14,6 +14,8 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     TreasureData p3Treasure;
     TreasureData p4Treasure;
     int activeMaps;
+
+    public float playersNeeded = 2;
     public TreasureData[] treasureIndex;
 
     private TreasureSpawner treasureSpawn;
@@ -40,7 +42,9 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         foreach (PlayerController player in allPlayersInScene) 
         {
             player.amIloaded = true;
-            player.playersLoaded[player.photonView.ControllerActorNr - 1] = true;
+            if (player.photonView.Controller.IsMasterClient) {
+                PlayerController.playersLoaded[player.photonView.ControllerActorNr - 1] = true;
+            }
             dick.Add(player.photonView.ControllerActorNr, player);
             Debug.Log("<color=yellow>Playername: " + player.photonView.Controller.NickName + " id: " + player.photonView.ControllerActorNr + "</color>");
         }
@@ -61,11 +65,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.LocalPlayer.Equals(PhotonNetwork.MasterClient))
         {
             foreach (var treasure in treasureIndex) {
-                if (treasure.PlayerID != 0)
-                {
-                    MapCaptureCam.QueueMapGenerate(treasure);
-                }
-
+                MapCaptureCam.QueueMapGenerate(treasure);
                 if (treasure.state == TreasureState.DUG_UP)
                 {
                     foreach (var dickpair in dick)
