@@ -94,6 +94,7 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
         }
         if (oldState != data.state) {
             photonView.RequestOwnership();
+            mapManager.treasureIndex[data.PlayerID - 1].state = data.state;
         }
         oldState = data.state;
     }
@@ -104,12 +105,15 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
         {
             Debug.Log("Sup im gonna send some info");
             stream.SendNext(data.state);
+            stream.SendNext(data.PlayerID);
         }
         else
         {
             Debug.Log("oh woops i just got some infoe hahahsdhads");
             data.state = (TreasureState) stream.ReceiveNext();
+            data.PlayerID = (int)stream.ReceiveNext();
             oldState = data.state;
+            mapManager.treasureIndex[data.PlayerID-1].state = data.state;
         }
     }
 }

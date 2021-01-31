@@ -14,14 +14,14 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     TreasureData p3Treasure;
     TreasureData p4Treasure;
     int activeMaps;
-    TreasureData[] treasureIndex;
+    public TreasureData[] treasureIndex;
 
     private TreasureSpawner treasureSpawn;
     public int shouldSpawnTreasureForPlayer = -1;
 
     private CreateMapTextures MapCaptureCam;
 
-    void Awake()
+    void Start()
     {
         treasureIndex = new TreasureData[] { p1Treasure, p2Treasure, p3Treasure, p4Treasure};
         treasureSpawn = GameObject.FindObjectOfType<TreasureSpawner>();
@@ -55,7 +55,19 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PhotonNetwork.LocalPlayer.Equals(PhotonNetwork.MasterClient))
         {
-            Debug.Log("Yo does this thing even work?");
+            foreach (var treasure in treasureIndex) {
+                if (treasure.state == TreasureState.DUG_UP)
+                {
+                    foreach (var dickpair in dick)
+                    {
+                        if (dickpair.Key == treasure.PlayerID)
+                        {
+                            GenerateNewTreasure(dickpair);
+                        }
+                    }
+                }
+            }
+         /*   Debug.Log("Yo does this thing even work?");
             if (shouldSpawnTreasureForPlayer > 0)
             {
                 foreach (var dickpair in dick)
@@ -67,13 +79,14 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
                         break;
                     }
                 }
-            }
+            }*/
         }
     }
 
     public PlayerController GetPlayerFromID(int id)
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is Trying to get playerID " + id);
+        Debug.Log("This returned " + dick[id].photonView.Owner.NickName);
         return dick[id];
     }
     
