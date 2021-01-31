@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playersReady: 0
-  playersNeeded: 2
+  playersNeeded: 4
   onAllPlayersReady:
     m_PersistentCalls:
       m_Calls: []
