@@ -223,17 +223,24 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         
         }
 
-        if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient) {
-            bool stillGood = true;
-            int goodCount = 4;
-            foreach (var goodbool in playersLoaded) {
-                if (stillGood == false || goodbool == false) {
-                    stillGood = false;
-                    goodCount--;
+        if (SceneManager.GetActiveScene().name == "IslandScene")
+        {
+            if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient)
+            {
+                bool stillGood = true;
+                int goodCount = 4;
+                foreach (var goodbool in playersLoaded)
+                {
+                    if (stillGood == false || goodbool == false)
+                    {
+                        stillGood = false;
+                        goodCount--;
+                    }
                 }
+
+                Debug.Log(goodCount + "People loaded into the map");
+                mapManager.everybodyloaded = stillGood;
             }
-            Debug.Log(goodCount + "People loaded into the map");
-            mapManager.everybodyloaded = stillGood;
         }
 
         UpdatePlayerPosition();
