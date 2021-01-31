@@ -43,11 +43,10 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
         if (PhotonNetwork.LocalPlayer.Equals(PhotonNetwork.MasterClient))
         {
-            Debug.Log("GHamining hgared");
             foreach (var dickEntry in dick)
             {
+                Debug.Log("GHamining hgared");
                 GenerateNewTreasure(dickEntry);
-                MapCaptureCam.QueueMapGenerate(dickEntry.Value.currentTreasure);
             }
         }
     }
@@ -86,8 +85,8 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         NavMesh.SamplePosition(randomPos, out hit, 90, NavMesh.AllAreas);
 
         treasureIndex[dickEntry.Key - 1] = new TreasureData(hit.position, dickEntry.Key);
-        treasureSpawn.SpawnTreasure(dickEntry.Value.currentTreasure);
-        
+        treasureSpawn.SpawnTreasure(treasureIndex[dickEntry.Key - 1]);
+        MapCaptureCam.QueueMapGenerate(treasureIndex[dickEntry.Key - 1]);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -131,6 +130,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
                 if (!oldData.Equals(newData) && !newData.IsNull())
                 {
+                    Debug.Log("YOoooo QUEUEUEUEUEUEU " + treasureIndex[newData.PlayerID - 1].PlayerID + " " + treasureIndex[newData.PlayerID - 1].TreasurePosition);
                     treasureIndex[newData.PlayerID - 1] = newData;
                     if (MapCaptureCam == null)
                     {
@@ -138,7 +138,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
                     }
 
 
-                    Debug.Log("YOoooo QUEUEUEUEUEUEU " + treasureIndex[newData.PlayerID - 1].PlayerID + " " + treasureIndex[newData.PlayerID - 1].TreasurePosition);
+                    
                     MapCaptureCam.QueueMapGenerate(this.treasureIndex[newData.PlayerID - 1]);
                 }
             }
