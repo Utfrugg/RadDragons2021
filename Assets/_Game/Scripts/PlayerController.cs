@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private PhotonView photonView;
     [SerializeField] private float speed = 10f;
 
+    public bool amIloaded;
+    public bool[] playersLoaded = { false, false, false, false };
+
     //Camera Values
     private Camera playerCam;
     private Quaternion cameraRotation = Quaternion.identity;
@@ -180,6 +183,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
             return;
+        
+        }
+
+        if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient) {
+            bool stillGood = true;
+            int goodCount = 4;
+            foreach (var goodbool in playersLoaded) {
+                if (stillGood == false || goodbool == false) {
+                    stillGood = false;
+                    goodCount--;
+                }
+            }
+            Debug.Log(goodCount + "People loaded into the map");
+            mapManager.everybodyloaded = stillGood;
         }
 
         UpdatePlayerPosition();
@@ -283,10 +300,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(isLookingAtMap);
+            stream.SendNext(photonView.ControllerActorNr);
+            stream.SendNext(amIloaded);
         }
         else
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
+            int regID = (int)stream.ReceiveNext();
+            playersLoaded[regID] = (bool)stream.ReceiveNext();
         }
     }
 }

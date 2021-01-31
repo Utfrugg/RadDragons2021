@@ -103,23 +103,28 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+        if (!PhotonNetwork.LocalPlayer.IsMasterClient || mapManager.everybodyloaded)
         {
-            Debug.Log("Sup im gonna send some info");
-            stream.SendNext(data.state);
-            stream.SendNext(data.PlayerID);
-        }
-        else
-        {
-            Debug.Log("oh woops i just got some infoe hahahsdhads");
-            data.state = (TreasureState) stream.ReceiveNext();
-            data.PlayerID = (int)stream.ReceiveNext();
-            oldState = data.state;
-
-            if (data.state != TreasureState.SPAWNED) {
-                BigX.gameObject.SetActive(false);
+            if (stream.IsWriting)
+            {
+                Debug.Log("Sup im gonna send some info");
+                stream.SendNext(data.state);
+                stream.SendNext(data.PlayerID);
             }
-            mapManager.treasureIndex[data.PlayerID-1].state = data.state;
-        }
+            else
+            {
+                Debug.Log("oh woops i just got some infoe hahahsdhads");
+                data.state = (TreasureState)stream.ReceiveNext();
+                data.PlayerID = (int)stream.ReceiveNext();
+                oldState = data.state;
+
+                if (data.state != TreasureState.SPAWNED)
+                {
+                    BigX.gameObject.SetActive(false);
+                }
+                if (mapManager.gameObject.activeInHierarchy)
+                    mapManager.treasureIndex[data.PlayerID - 1].state = data.state;
+            }
+        } 
     }
 }

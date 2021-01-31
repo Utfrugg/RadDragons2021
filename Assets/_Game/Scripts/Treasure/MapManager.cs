@@ -19,6 +19,8 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     private TreasureSpawner treasureSpawn;
     public int shouldSpawnTreasureForPlayer = -1;
 
+    public bool initinnit = false;
+    public bool everybodyloaded;
     private CreateMapTextures MapCaptureCam;
 
     void Start()
@@ -37,6 +39,8 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
         foreach (PlayerController player in allPlayersInScene) 
         {
+            player.amIloaded = true;
+            player.playersLoaded[player.photonView.ControllerActorNr - 1] = true;
             dick.Add(player.photonView.ControllerActorNr, player);
             Debug.Log("<color=yellow>Playername: " + player.photonView.Controller.NickName + " id: " + player.photonView.ControllerActorNr + "</color>");
         }
@@ -49,6 +53,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
                 GenerateNewTreasure(dickEntry);
             }
         }
+        initinnit = true;
     }
 
     void Update()
@@ -105,55 +110,58 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
+        if (!PhotonNetwork.LocalPlayer.IsMasterClient || everybodyloaded)
         {
-            stream.SendNext(shouldSpawnTreasureForPlayer);
-            activeMaps = 0;
-            foreach (var treasure in treasureIndex)
+            if (stream.IsWriting)
             {
-                if (treasure.PlayerID != 0)
+                stream.SendNext(shouldSpawnTreasureForPlayer);
+                activeMaps = 0;
+                foreach (var treasure in treasureIndex)
                 {
-                    activeMaps++;
-                }
-            }
-            stream.SendNext(activeMaps);
-            foreach (var treasure in treasureIndex)
-            {
-                if (treasure.PlayerID != 0)
-                {
-                    stream.SendNext(treasure.TreasurePosition);
-                    stream.SendNext(treasure.PlayerID);
-                    stream.SendNext(treasure.state);
-
-                }
-            }
-        }
-        else
-        {
-            this.shouldSpawnTreasureForPlayer = (int)stream.ReceiveNext();
-
-            activeMaps = (int)stream.ReceiveNext();
-            for (int i = 0; i < activeMaps; i++)
-            {
-                TreasureData newData;
-                newData.TreasurePosition = (Vector3)stream.ReceiveNext();
-                newData.PlayerID = (int)stream.ReceiveNext();
-                newData.state = (TreasureState)stream.ReceiveNext();
-
-                TreasureData oldData = treasureIndex[newData.PlayerID - 1];
-
-                if (!oldData.Equals(newData) && !newData.IsNull())
-                {
-                    Debug.Log("YOoooo QUEUEUEUEUEUEU " + treasureIndex[newData.PlayerID - 1].PlayerID + " " + treasureIndex[newData.PlayerID - 1].TreasurePosition);
-                    treasureIndex[newData.PlayerID - 1] = newData;
-                    if (MapCaptureCam == null)
+                    if (treasure.PlayerID != 0)
                     {
-                        Debug.LogError("MapCaptureCam is NULL!!!!");
+                        activeMaps++;
                     }
+                }
+                stream.SendNext(activeMaps);
+                foreach (var treasure in treasureIndex)
+                {
+                    if (treasure.PlayerID != 0)
+                    {
+                        stream.SendNext(treasure.TreasurePosition);
+                        stream.SendNext(treasure.PlayerID);
+                        stream.SendNext(treasure.state);
+
+                    }
+                }
+            }
+            else
+            {
+                this.shouldSpawnTreasureForPlayer = (int)stream.ReceiveNext();
+
+                activeMaps = (int)stream.ReceiveNext();
+                for (int i = 0; i < activeMaps; i++)
+                {
+                    TreasureData newData;
+                    newData.TreasurePosition = (Vector3)stream.ReceiveNext();
+                    newData.PlayerID = (int)stream.ReceiveNext();
+                    newData.state = (TreasureState)stream.ReceiveNext();
+
+                    TreasureData oldData = treasureIndex[newData.PlayerID - 1];
+
+                    if (!oldData.Equals(newData) && !newData.IsNull())
+                    {
+                        Debug.Log("YOoooo QUEUEUEUEUEUEU " + treasureIndex[newData.PlayerID - 1].PlayerID + " " + treasureIndex[newData.PlayerID - 1].TreasurePosition);
+                        treasureIndex[newData.PlayerID - 1] = newData;
+                        if (MapCaptureCam == null)
+                        {
+                            Debug.LogError("MapCaptureCam is NULL!!!!");
+                        }
 
 
-                    
-                    MapCaptureCam.QueueMapGenerate(this.treasureIndex[newData.PlayerID - 1]);
+
+                        MapCaptureCam.QueueMapGenerate(this.treasureIndex[newData.PlayerID - 1]);
+                    }
                 }
             }
         }
