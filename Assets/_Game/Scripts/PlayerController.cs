@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private MapManager mapManager;
     private CreateMapTextures MapCaptureCam;
 
+    private Vector3 origMapPos;
+
 
 #if DEBUG
     [SerializeField] private bool dontDoSplitScreen = true;
@@ -108,7 +110,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         
         }
 #endif
-        map.SetActive(false);
+        origMapPos = map.transform.position;
+        map.transform.position = new Vector3(0, 1000, 0);
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
@@ -125,7 +128,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         //TODO Use this system to show the map. This way it shows up everywhere
         if (isLookingAtMap != map.activeInHierarchy)
         {
-            map.SetActive(isLookingAtMap);
+            if(isLookingAtMap)
+            {
+                map.transform.position = origMapPos;
+            }
+            else
+            {
+                map.transform.position = new Vector3(0, 1000, 0);
+            }
         }
 
         if (startDigging)
