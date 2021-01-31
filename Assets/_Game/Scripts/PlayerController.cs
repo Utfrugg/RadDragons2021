@@ -110,8 +110,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         
         }
 #endif
-        origMapPos = map.transform.localPosition;
-        map.transform.localPosition = new Vector3(0, 1000, 0);
+        
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
@@ -126,15 +125,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         //TODO Use this system to show the map. This way it shows up everywhere
-        if (isLookingAtMap != map.activeInHierarchy)
+        if ((isLookingAtMap && map.layer == LayerMask.NameToLayer("OnlyOnMap")) 
+            || (!isLookingAtMap && map.layer == LayerMask.NameToLayer("Default")))
         {
             if(isLookingAtMap)
             {
-                map.transform.localPosition = origMapPos;
+                map.layer = LayerMask.NameToLayer("Default");
+                for (int i = 0; i < map.transform.childCount; i++)
+                {
+                    map.transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Default");
+                }
+                
             }
             else
             {
-                map.transform.localPosition = new Vector3(0, 1000, 0);
+                map.layer = LayerMask.NameToLayer("OnlyOnMap");
+                for (int i = 0; i < map.transform.childCount; i++)
+                {
+                    map.transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("OnlyOnMap");
+                }
             }
         }
 
@@ -176,6 +185,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         UpdatePlayerMap(); //Looking at maps
         UpdatePlayerDig(); //Digging up treasure
     }
+
 
     private void UpdateCameraAngle()
     {
