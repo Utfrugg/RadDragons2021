@@ -93,7 +93,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
     
     public void GenerateNewTreasure(KeyValuePair<int, PlayerController> dickEntry)
     {
-        Vector3 randomPos = Random.insideUnitSphere * 40;
+        Vector3 randomPos = Random.insideUnitSphere * 70 + new Vector3(-20, 10, -20);
 
         NavMeshHit hit;
         NavMesh.SamplePosition(randomPos, out hit, 90, NavMesh.AllAreas);
