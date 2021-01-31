@@ -110,8 +110,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         
         }
 #endif
-        origMapPos = map.transform.position;
-        map.transform.position = new Vector3(0, 1000, 0);
+        origMapPos = map.transform.localPosition;
+        map.transform.localPosition = new Vector3(0, 1000, 0);
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
@@ -130,11 +130,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             if(isLookingAtMap)
             {
-                map.transform.position = origMapPos;
+                map.transform.localPosition = origMapPos;
             }
             else
             {
-                map.transform.position = new Vector3(0, 1000, 0);
+                map.transform.localPosition = new Vector3(0, 1000, 0);
             }
         }
 
