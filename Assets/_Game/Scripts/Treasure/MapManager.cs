@@ -8,7 +8,14 @@ using UnityEngine.AI;
 public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     Dictionary<int, PlayerController> dick = new Dictionary<int, PlayerController>();
-    
+
+    TreasureData p1Treasure;
+    TreasureData p2Treasure;
+    TreasureData p3Treasure;
+    TreasureData p4Treasure;
+    int activeMaps;
+    TreasureData[] treasureIndex;
+
     private TreasureSpawner treasureSpawn;
     public int shouldSpawnTreasureForPlayer = -1;
 
@@ -16,6 +23,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
+        treasureIndex = new TreasureData[] { p1Treasure, p2Treasure, p3Treasure, p4Treasure};
         treasureSpawn = GameObject.FindObjectOfType<TreasureSpawner>();
         MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
 
@@ -77,7 +85,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         NavMeshHit hit;
         NavMesh.SamplePosition(randomPos, out hit, 90, NavMesh.AllAreas);
 
-        dickEntry.Value.currentTreasure = new TreasureData(hit.position, dickEntry.Key);
+        treasureIndex[dickEntry.Key - 1] = new TreasureData(hit.position, dickEntry.Key);
         treasureSpawn.SpawnTreasure(dickEntry.Value.currentTreasure);
         
     }
@@ -87,10 +95,53 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(shouldSpawnTreasureForPlayer);
+            activeMaps = 0;
+            foreach (var treasure in treasureIndex)
+            {
+                if (treasure.PlayerID != 0)
+                {
+                    activeMaps++;
+                }
+            }
+            stream.SendNext(activeMaps);
+            foreach (var treasure in treasureIndex)
+            {
+                if (treasure.PlayerID != 0)
+                {
+                    stream.SendNext(treasure.TreasurePosition);
+                    stream.SendNext(treasure.PlayerID);
+                    stream.SendNext(treasure.state);
+
+                }
+            }
         }
         else
         {
-            this.shouldSpawnTreasureForPlayer = (int) stream.ReceiveNext();
+            this.shouldSpawnTreasureForPlayer = (int)stream.ReceiveNext();
+
+            activeMaps = (int)stream.ReceiveNext();
+            for (int i = 0; i < activeMaps; i++)
+            {
+                TreasureData newData;
+                newData.TreasurePosition = (Vector3)stream.ReceiveNext();
+                newData.PlayerID = (int)stream.ReceiveNext();
+                newData.state = (TreasureState)stream.ReceiveNext();
+
+                TreasureData oldData = treasureIndex[newData.PlayerID - 1];
+
+                if (!oldData.Equals(newData) && !newData.IsNull())
+                {
+                    treasureIndex[newData.PlayerID - 1] = newData;
+                    if (MapCaptureCam == null)
+                    {
+                        Debug.LogError("MapCaptureCam is NULL!!!!");
+                    }
+
+
+                    Debug.Log("YOoooo QUEUEUEUEUEUEU " + treasureIndex[newData.PlayerID - 1].PlayerID + " " + treasureIndex[newData.PlayerID - 1].TreasurePosition);
+                    MapCaptureCam.QueueMapGenerate(this.treasureIndex[newData.PlayerID - 1]);
+                }
+            }
         }
     }
 }

@@ -281,35 +281,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(isLookingAtMap);
-            stream.SendNext(currentTreasure.TreasurePosition);
-            stream.SendNext(currentTreasure.PlayerID);
-            stream.SendNext(currentTreasure.state);
         }
         else
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
-
-            TreasureData oldData = currentTreasure;
-            TreasureData newData;
-            newData.TreasurePosition = (Vector3)stream.ReceiveNext();
-            newData.PlayerID = (int)stream.ReceiveNext();
-            newData.state = (TreasureState)stream.ReceiveNext();
-
-            if (!oldData.Equals(newData) && !newData.IsNull())
-            {
-                if (SceneManager.GetActiveScene().name != "LobbyRoom")
-                {
-                    currentTreasure = newData;
-                    if (MapCaptureCam == null)
-                    {
-                        Debug.LogError("MapCaptureCam is NULL!!!!");
-                    }
-
-
-                    Debug.Log("YOoooo QUEUEUEUEUEUEU " + currentTreasure.PlayerID + " " + currentTreasure.TreasurePosition);
-                    MapCaptureCam.QueueMapGenerate(this.currentTreasure);
-                }
-            }
         }
     }
 }
