@@ -48,7 +48,7 @@ public class CreateMapTextures : MonoBehaviour
             CameraComponent.enabled = true;
             this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
             Debug.Log("<color=blue>which has" + mapManager.GetPlayerFromID(currentMap.PlayerID).currentTreasure.TreasurePosition + "as location");
-            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).transform.GetComponentInChildren<TreasureMap>().mapTexture;
+            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
             maps.Dequeue();
         }
     }
