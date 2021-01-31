@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+Assets/_Game/Scenes/IslandScene_CollisionPass.unity
+Assets/_Game/Scenes/IslandScene_CollisionPass.unity.meta
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+UserSettings/EditorUserSettings.asset
