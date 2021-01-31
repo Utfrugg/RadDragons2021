@@ -21,42 +21,38 @@ public class CreateMapTextures : MonoBehaviour
 
     void Start()
     {
-        RenderPipelineManager.beginFrameRendering += OnCameraPreRender;
-        RenderPipelineManager.endFrameRendering += OnCameraPostRender;
+        RenderPipelineManager.endCameraRendering += OnCameraPostRender;
     }
 
 
     public void QueueMapGenerate(TreasureData mapToGen){
-        Debug.Log("<color=red>Just queued a Map for PlayerID: " + mapToGen.PlayerID + " at position: " + mapToGen.TreasurePosition + "</colour>");
+        Debug.Log("<color=red>Just queued a Map for PlayerID: " + mapToGen.PlayerID + " at position: " + mapToGen.TreasurePosition + "</color>");
         maps.Enqueue(mapToGen);
     }
-    private void OnCameraPreRender(ScriptableRenderContext context, Camera[] camera)
+
+    private void OnCameraPostRender(ScriptableRenderContext context, Camera camera)
     {
-
-    }
-
-    private void OnCameraPostRender(ScriptableRenderContext context, Camera[] camera)
-    {
-
-        if (CameraComponent.enabled) {
-            CameraComponent.enabled = false;
-        }
-        if (maps.Count > 0)
-        {
-            TreasureData currentMap = maps.Peek();
-            Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.PlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
-            CameraComponent.enabled = true;
-            this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
-            Debug.Log("<color=blue>which has" + mapManager.GetPlayerFromID(currentMap.PlayerID).currentTreasure.TreasurePosition + "as location");
-            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
-            maps.Dequeue();
-        }
+            if (CameraComponent.enabled)
+            {
+                CameraComponent.enabled = false;
+            }
+            if (maps.Count > 0)
+            {
+                TreasureData currentMap = maps.Peek();
+                Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.PlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
+                CameraComponent.enabled = true;
+                this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
+                this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
+            if (currentMap.state == TreasureState.SPAWNED) {
+                maps.Enqueue(currentMap);
+            }
+                maps.Dequeue();
+            }
     }
 
     void OnDestroy()
     {
-        RenderPipelineManager.beginFrameRendering -= OnCameraPreRender;
-        RenderPipelineManager.endFrameRendering -= OnCameraPostRender;
+        RenderPipelineManager.endCameraRendering -= OnCameraPostRender;
     }
 
     // Update is called once per frame
