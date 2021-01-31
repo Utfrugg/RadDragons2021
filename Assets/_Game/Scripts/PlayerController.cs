@@ -346,7 +346,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(isLookingAtMap);
             stream.SendNext(photonView.ControllerActorNr);
             stream.SendNext(amIloaded);
-            stream.SendNext(mapManager.everybodyloaded);
+
+            stream.SendNext((mapManager == null) ? false : mapManager.everybodyloaded);
         }
         else
         {

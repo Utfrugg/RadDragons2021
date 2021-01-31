@@ -114,7 +114,7 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log("oh woops i just got some infoe hahahsdhads");
                 data.state = (TreasureState)stream.ReceiveNext();
                 data.PlayerID = (int)stream.ReceiveNext();
-            if (mapManager.everybodyloaded)
+            if ((mapManager == null) ? false : mapManager.everybodyloaded)
             {
                 oldState = data.state;
 
