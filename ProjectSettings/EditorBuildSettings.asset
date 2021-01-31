@@ -27,6 +27,9 @@ EditorBuildSettings:
     path: Assets/_Game/Scenes/Rooms/Room for 4.unity
     guid: e40c7dbfac6a0af4c839b0645fd2478b
   - enabled: 1
+    path: Assets/_Game/Scenes/IslandScene.unity
+    guid: 00da81b8ea193924e892a3027f904650
+  - enabled: 1
     path: Assets/_Game/Scenes/GameplayScene.unity
     guid: f643ac9cb58857044896119e4c61e9f1
   m_configObjects: {}
