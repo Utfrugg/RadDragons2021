@@ -19,7 +19,14 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
         treasureSpawn = GameObject.FindObjectOfType<TreasureSpawner>();
         MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
 
+        TreasureMap[] allMaps = FindObjectsOfType<TreasureMap>();
+        foreach (TreasureMap map in allMaps)
+        {
+            map.InitMapInnit();
+        }
+
         PlayerController[] allPlayersInScene = FindObjectsOfType<PlayerController>();
+
         foreach (PlayerController player in allPlayersInScene) 
         {
             dick.Add(player.photonView.ControllerActorNr, player);

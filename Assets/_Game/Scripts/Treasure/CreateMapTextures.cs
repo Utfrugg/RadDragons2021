@@ -27,6 +27,7 @@ public class CreateMapTextures : MonoBehaviour
 
 
     public void QueueMapGenerate(TreasureData mapToGen){
+        Debug.Log("<color=red>Just queued a Map for PlayerID: " + mapToGen.PlayerID + " at position: " + mapToGen.TreasurePosition + "</colour>");
         maps.Enqueue(mapToGen);
     }
     private void OnCameraPreRender(ScriptableRenderContext context, Camera[] camera)
@@ -43,9 +44,11 @@ public class CreateMapTextures : MonoBehaviour
         if (maps.Count > 0)
         {
             TreasureData currentMap = maps.Peek();
+            Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.PlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
             CameraComponent.enabled = true;
             this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
-            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
+            Debug.Log("<color=blue>which has" + mapManager.GetPlayerFromID(currentMap.PlayerID).currentTreasure.TreasurePosition + "as location");
+            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).transform.GetComponentInChildren<TreasureMap>().mapTexture;
             maps.Dequeue();
         }
     }
