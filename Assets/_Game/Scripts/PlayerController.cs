@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
+        map.GetComponentInChildren<TreasureMap>().InitMapInnit();
         TotalAmountOfPlayers++;
 #if DEBUG
         if (!dontDoSplitScreen) { 
@@ -104,6 +105,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             default:
                 Debug.LogError("Too Many Players!");
                 break;
+
         }
 
 #if DEBUG
