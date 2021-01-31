@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 using UnityEngine;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
     // Store these settings in a separate class or struct perhaps
-
     private string roomName = "EpicRoom";
-    private string gameVersion = "4";
+    private string gameVersion = "5";
 
     [SerializeField] private GameObject controlPanel;
     [SerializeField] private GameObject progressLabel;
@@ -94,5 +94,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         progressLabel.SetActive(false);
         controlPanel.SetActive(true);
+    }
+
+    public void SetRoomName(string pname)
+    {
+        roomName = pname;
     }
 }
