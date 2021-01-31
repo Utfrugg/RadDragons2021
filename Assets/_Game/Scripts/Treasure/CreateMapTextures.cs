@@ -36,14 +36,15 @@ public class CreateMapTextures : MonoBehaviour
             {
                 CameraComponent.enabled = false;
             }
-            if (maps.Count > 0)
-            {
-                TreasureData currentMap = maps.Peek();
-                Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.PlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
-                CameraComponent.enabled = true;
-                this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
-                this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
-                maps.Dequeue();
+        if (maps.Count > 0)
+        {
+            TreasureData currentMap = maps.Peek();
+            Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.PlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
+            CameraComponent.enabled = true;
+            this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
+            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
+            maps.Dequeue();
+        }
     }
 
     void OnDestroy()

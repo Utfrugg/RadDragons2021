@@ -45,6 +45,7 @@ public enum TreasureState
 public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
 {
     public TreasureData data;
+    Transform BigX;
     Transform chest;
     private MapManager mapManager;
 
@@ -55,6 +56,7 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         chest = transform.Find("chest");
+        BigX = transform.Find("CrossBonePlane");
         mapManager = GameObject.FindObjectOfType<MapManager>();
     }
 
@@ -72,9 +74,10 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void DigUp()
     {
-        
-        data.state = TreasureState.DIGGING;
-        Debug.Log("Treasure Dug Up!");
+        if (data.state == TreasureState.SPAWNED) {
+            data.state = TreasureState.DIGGING;
+            Debug.Log("Treasure Dug Up!");
+        }
     }
 
     private void Update()
@@ -84,8 +87,7 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
             if (timeDigging >= timeToBeDug)
             {
                 data.state = TreasureState.DUG_UP;
-                //When a treasure has been dug up, generate a new treasure
-                //Call this in mapManager
+                BigX.gameObject.SetActive(false);
                 mapManager.shouldSpawnTreasureForPlayer = data.PlayerID;
             }
 
@@ -113,6 +115,10 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
             data.state = (TreasureState) stream.ReceiveNext();
             data.PlayerID = (int)stream.ReceiveNext();
             oldState = data.state;
+
+            if (data.state != TreasureState.SPAWNED) {
+                BigX.gameObject.SetActive(false);
+            }
             mapManager.treasureIndex[data.PlayerID-1].state = data.state;
         }
     }
