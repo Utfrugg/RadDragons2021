@@ -50,6 +50,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private Vector3 origMapPos;
 
+    public Material[] playerMaterials;
+
+    public ParticleSystem runParticles;
+    public ParticleSystem digParticles;
+    [SerializeField] public GameObject shovel;
+
 
 #if DEBUG
     [SerializeField] private bool dontDoSplitScreen = true;
@@ -87,11 +93,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 #if DEBUG
         if (!dontDoSplitScreen) { 
 #endif
+
+            
         Vector2 screenDimension = new Vector2(0.5f, 0.5f);
+
+        var renderers = transform.GetChild(0).gameObject.GetComponentsInChildren<Renderer>();
+
         switch (TotalAmountOfPlayers)
         {
             case 1:
                 playerCam.rect = new Rect(ScreenDivisions.TopLeft, screenDimension);
+
                 break;
             case 2:
                 playerCam.rect = new Rect(ScreenDivisions.TopRight, screenDimension);
@@ -108,8 +120,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         }
 
+        foreach (var rend in renderers)
+        {
+            rend.sharedMaterial = playerMaterials[TotalAmountOfPlayers - 1];
+        }
+
+        digParticles.Stop();
+
 #if DEBUG
-        
+
         }
 #endif
         
@@ -121,6 +140,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
         }
+    }
+
+    IEnumerator StopDigParticles()
+    {
+        yield return new WaitForSeconds(4f);
+        digParticles.Stop();
+        shovel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -152,6 +178,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (startDigging)
         {
             animStC.StartDiggingAnim();
+            digParticles.Play();
+            shovel.SetActive(true);
+            StartCoroutine(StopDigParticles());
             startDigging = false;
         }
 
@@ -159,6 +188,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         Vector2 animVelocity = new Vector2(velocity.x, velocity.z);
         animStC.UpdateMoveAnim(animVelocity.magnitude * 10);
+        if (animVelocity.magnitude > 0.0f)
+        {
+            runParticles.Play();
+        }
+        else
+        {
+            runParticles.Stop();
+        }
 
         if (photonView.CreatorActorNr != photonView.ControllerActorNr)
             Debug.Log("CreateActorNR" + photonView.CreatorActorNr + "is NOT equal to ControllerCreatorNR" + photonView.ControllerActorNr);
