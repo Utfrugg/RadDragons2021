@@ -353,7 +353,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
             int regID = (int)stream.ReceiveNext();
-            playersLoaded[regID] = (bool)stream.ReceiveNext();
+            playersLoaded[regID - 1] = (bool)stream.ReceiveNext();
             bool loadyuuh = (bool)stream.ReceiveNext();
 
 
