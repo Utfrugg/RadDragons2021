@@ -48,6 +48,8 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
     Transform chest;
     private MapManager mapManager;
 
+    TreasureState oldState;
+
     float timeToBeDug = 1f;
     float timeDigging = 0;
     private void Start()
@@ -90,17 +92,24 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
             timeDigging += Time.deltaTime;
             chest.localPosition = new Vector3(0, Mathf.Lerp(-2, 0, Mathf.Min(1, (timeDigging/timeToBeDug))), 0);
         }
+        if (oldState != data.state) {
+            photonView.RequestOwnership();
+        }
+        oldState = data.state;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
+            Debug.Log("Sup im gonna send some info");
             stream.SendNext(data.state);
         }
         else
         {
+            Debug.Log("oh woops i just got some infoe hahahsdhads");
             data.state = (TreasureState) stream.ReceiveNext();
+            oldState = data.state;
         }
     }
 }
