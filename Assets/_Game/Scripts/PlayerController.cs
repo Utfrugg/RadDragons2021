@@ -255,14 +255,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(isLookingAtMap);
-            stream.SendNext(currentTreasure);
+            stream.SendNext(currentTreasure.TreasurePosition);
+            stream.SendNext(currentTreasure.PlayerID);
+            stream.SendNext(currentTreasure.state);
         }
         else
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
 
             TreasureData oldData = currentTreasure;
-            this.currentTreasure = (TreasureData) stream.ReceiveNext();
+            this.currentTreasure.TreasurePosition = (Vector3) stream.ReceiveNext();
+            this.currentTreasure.PlayerID = (int) stream.ReceiveNext();
+            this.currentTreasure.state = (TreasureState) stream.ReceiveNext();
 
             if (!oldData.Equals(null) || !oldData.Equals(currentTreasure))
             {
