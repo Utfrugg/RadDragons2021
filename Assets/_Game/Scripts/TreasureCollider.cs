@@ -26,6 +26,11 @@ public struct TreasureData
                this.PlayerID == data.PlayerID &&
                this.state == data.state;
     }
+
+    public bool IsNull()
+    {
+        return this.PlayerID == 0;
+    }
 }
 
 public enum TreasureState

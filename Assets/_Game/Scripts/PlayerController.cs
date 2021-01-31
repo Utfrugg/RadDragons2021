@@ -65,10 +65,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         DontDestroyOnLoad(this.gameObject);
 
-        mapManager = GameObject.FindObjectOfType<MapManager>();
-        MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            if (scene.name == "GameplayScene")
+            {
+                mapManager = GameObject.FindObjectOfType<MapManager>();
+                MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
+            }
 
-        
+            return;
+        };
     }
 
     // Start is called before the first frame update
@@ -264,13 +270,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             this.isLookingAtMap = (bool) stream.ReceiveNext();
 
             TreasureData oldData = currentTreasure;
-            this.currentTreasure.TreasurePosition = (Vector3) stream.ReceiveNext();
-            this.currentTreasure.PlayerID = (int) stream.ReceiveNext();
-            this.currentTreasure.state = (TreasureState) stream.ReceiveNext();
+            TreasureData newData;
+            newData.TreasurePosition = (Vector3)stream.ReceiveNext();
+            newData.PlayerID = (int)stream.ReceiveNext();
+            newData.state = (TreasureState)stream.ReceiveNext();
 
-            if (!oldData.Equals(null) || !oldData.Equals(currentTreasure))
+            if (!oldData.Equals(newData) && !newData.IsNull())
             {
-                MapCaptureCam.QueueMapGenerate(this.currentTreasure);
+                if (SceneManager.GetActiveScene().name != "LobbyRoom")
+                {
+                    currentTreasure = newData;
+                    if (MapCaptureCam == null)
+                    {
+                        Debug.LogError("MapCaptureCam is NULL!!!!");
+                    }
+
+
+                    Debug.Log("YOoooo QUEUEUEUEUEUEU " + currentTreasure.PlayerID + " " + currentTreasure.TreasurePosition);
+                    MapCaptureCam.QueueMapGenerate(this.currentTreasure);
+                }
             }
         }
     }

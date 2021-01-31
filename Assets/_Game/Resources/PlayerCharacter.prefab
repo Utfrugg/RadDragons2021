@@ -88,6 +88,10 @@ MonoBehaviour:
   map: {fileID: 3575068008304808417}
   treasureColliderInRange: {fileID: 0}
   treasuresDugUp: 0
+  currentTreasure:
+    TreasurePosition: {x: 0, y: 0, z: 0}
+    PlayerID: 0
+    state: 0
   dontDoSplitScreen: 0
 --- !u!114 &4587417666308127863
 MonoBehaviour:

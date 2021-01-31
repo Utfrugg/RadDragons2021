@@ -53,6 +53,7 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public PlayerController GetPlayerFromID(int id)
     {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is Trying to get playerID " + id);
         return dick[id];
     }
     
