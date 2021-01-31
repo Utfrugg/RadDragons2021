@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
@@ -41,7 +42,7 @@ public enum TreasureState
     DUG_UP
 }
 
-public class TreasureCollider : MonoBehaviour
+public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
 {
     public TreasureData data;
     Transform chest;
@@ -54,6 +55,8 @@ public class TreasureCollider : MonoBehaviour
         chest = transform.Find("chest");
         mapManager = GameObject.FindObjectOfType<MapManager>();
     }
+
+
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out PlayerController player))
@@ -86,6 +89,18 @@ public class TreasureCollider : MonoBehaviour
 
             timeDigging += Time.deltaTime;
             chest.localPosition = new Vector3(0, Mathf.Lerp(-2, 0, Mathf.Min(1, (timeDigging/timeToBeDug))), 0);
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(data.state);
+        }
+        else
+        {
+            data.state = (TreasureState) stream.ReceiveNext();
         }
     }
 }
