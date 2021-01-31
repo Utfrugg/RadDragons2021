@@ -346,12 +346,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(isLookingAtMap);
             stream.SendNext(photonView.ControllerActorNr);
             stream.SendNext(amIloaded);
+            stream.SendNext(mapManager.everybodyloaded);
         }
         else
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
             int regID = (int)stream.ReceiveNext();
             playersLoaded[regID] = (bool)stream.ReceiveNext();
+            bool loadyuuh = (bool)stream.ReceiveNext();
+
+
+            if (!PhotonNetwork.LocalPlayer.IsMasterClient && loadyuuh) {
+                mapManager.everybodyloaded = loadyuuh;
+            }
         }
     }
 }

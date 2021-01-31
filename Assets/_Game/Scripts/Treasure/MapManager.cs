@@ -110,8 +110,6 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (!PhotonNetwork.LocalPlayer.IsMasterClient || everybodyloaded)
-        {
             if (stream.IsWriting)
             {
                 stream.SendNext(shouldSpawnTreasureForPlayer);
@@ -137,16 +135,18 @@ public class MapManager : MonoBehaviourPunCallbacks, IPunObservable
             }
             else
             {
+
                 this.shouldSpawnTreasureForPlayer = (int)stream.ReceiveNext();
 
                 activeMaps = (int)stream.ReceiveNext();
-                for (int i = 0; i < activeMaps; i++)
+            for (int i = 0; i < activeMaps; i++)
+            {
+                TreasureData newData;
+                newData.TreasurePosition = (Vector3)stream.ReceiveNext();
+                newData.PlayerID = (int)stream.ReceiveNext();
+                newData.state = (TreasureState)stream.ReceiveNext();
+                if (everybodyloaded)
                 {
-                    TreasureData newData;
-                    newData.TreasurePosition = (Vector3)stream.ReceiveNext();
-                    newData.PlayerID = (int)stream.ReceiveNext();
-                    newData.state = (TreasureState)stream.ReceiveNext();
-
                     TreasureData oldData = treasureIndex[newData.PlayerID - 1];
 
                     if (!oldData.Equals(newData) && !newData.IsNull())

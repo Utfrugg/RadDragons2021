@@ -103,8 +103,6 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (!PhotonNetwork.LocalPlayer.IsMasterClient || mapManager.everybodyloaded)
-        {
             if (stream.IsWriting)
             {
                 Debug.Log("Sup im gonna send some info");
@@ -116,6 +114,8 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log("oh woops i just got some infoe hahahsdhads");
                 data.state = (TreasureState)stream.ReceiveNext();
                 data.PlayerID = (int)stream.ReceiveNext();
+            if (mapManager.everybodyloaded)
+            {
                 oldState = data.state;
 
                 if (data.state != TreasureState.SPAWNED)
