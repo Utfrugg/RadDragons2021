@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private float gravity = -20f;
 
-    [SerializeField] private GameObject map;
+    [SerializeField] public GameObject map;
     private bool isLookingAtMap = false;
     private bool startDigging = false;
 
@@ -41,8 +41,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     public TreasureCollider treasureColliderInRange = null;
     public int treasuresDugUp = 0;
+    public TreasureData currentTreasure;
 
     private AnimStateController animStC;
+
+    private MapManager mapManager;
+    private CreateMapTextures MapCaptureCam;
+
 
 #if DEBUG
     [SerializeField] private bool dontDoSplitScreen = true;
@@ -59,6 +64,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        mapManager = GameObject.FindObjectOfType<MapManager>();
+        MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
+
+        
     }
 
     // Start is called before the first frame update
@@ -245,10 +255,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(isLookingAtMap);
+            stream.SendNext(currentTreasure.TreasurePosition);
+            stream.SendNext(currentTreasure.PlayerID);
+            stream.SendNext(currentTreasure.state);
         }
         else
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
+
+            TreasureData oldData = currentTreasure;
+            this.currentTreasure.TreasurePosition = (Vector3) stream.ReceiveNext();
+            this.currentTreasure.PlayerID = (int) stream.ReceiveNext();
+            this.currentTreasure.state = (TreasureState) stream.ReceiveNext();
+
+            if (!oldData.Equals(null) || !oldData.Equals(currentTreasure))
+            {
+                MapCaptureCam.QueueMapGenerate(this.currentTreasure);
+            }
         }
     }
 }

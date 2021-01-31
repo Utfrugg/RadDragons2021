@@ -7,7 +7,7 @@ public class CreateMapTextures : MonoBehaviour
 {
     public float CameraHeightOffset;
     private Queue<TreasureData> maps = new Queue<TreasureData>();
-
+    private MapManager mapManager;
 
     Camera CameraComponent;
     // Start is called before the first frame update
@@ -15,6 +15,8 @@ public class CreateMapTextures : MonoBehaviour
     {
         CameraComponent = GetComponent<Camera>();
         CameraComponent.enabled = false;
+
+        mapManager = GameObject.FindObjectOfType<MapManager>();
     }
 
     void Start()
@@ -43,7 +45,7 @@ public class CreateMapTextures : MonoBehaviour
             TreasureData currentMap = maps.Peek();
             CameraComponent.enabled = true;
             this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
-            this.GetComponent<Camera>().targetTexture = currentMap.mapTexture;
+            this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponent<TreasureMap>().mapTexture;
             maps.Dequeue();
         }
     }
