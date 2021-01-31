@@ -271,7 +271,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (PhotonNetwork.LevelLoadingProgress <= 0f)
             {
-                PhotonNetwork.LoadLevel("GameplayScene");
+                PhotonNetwork.LoadLevel("IslandScene");
             }
         }
 
