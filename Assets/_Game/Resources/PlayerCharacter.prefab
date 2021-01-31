@@ -54,8 +54,8 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_MinMoveDistance: 0.0001
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!136 &4458837221767872213
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -67,9 +67,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4458837221767872202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,10 +82,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354610b0707268c44b635546c3fc3eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 5
   mouseSensitivity: 800
-  jumpHeight: 3
-  gravity: -20
+  jumpHeight: 1
+  gravity: -10
   map: {fileID: 3575068008304808417}
   treasureColliderInRange: {fileID: 0}
   treasuresDugUp: 0
@@ -161,7 +161,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6014547650764961255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.016}
+  m_LocalPosition: {x: 0, y: 1.902, z: 0.046}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3575068008304808416}
@@ -193,7 +193,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 45
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
