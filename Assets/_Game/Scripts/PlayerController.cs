@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         SceneManager.sceneLoaded += (scene, mode) =>
         {
-            if (scene.name == "GameplayScene")
+            if (scene.name == "IslandScene")
             {
                 mapManager = GameObject.FindObjectOfType<MapManager>();
                 MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
