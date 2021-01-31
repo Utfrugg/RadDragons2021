@@ -82,8 +82,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354610b0707268c44b635546c3fc3eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  mouseSensitivity: 100
+  speed: 6
+  mouseSensitivity: 200
   jumpHeight: 1
   gravity: -10
   map: {fileID: 3575068008304808417}
@@ -115,7 +115,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 4458837221767872202}
   - {fileID: 721046281037715450}
-  viewIdField: 1
+  viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &721046281037715450
