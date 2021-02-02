@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -63,6 +64,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public int score = 0;
     [SerializeField] private int stolenScore = 2;
     [SerializeField] private int normalScore = 1;
+
+    [SerializeField] private TMP_Text playerNameText;
 
 
 #if DEBUG
@@ -141,8 +144,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         foreach (var rend in renderers)
         {
-            rend.sharedMaterial = playerMaterials[TotalAmountOfPlayers - 1];
+            rend.sharedMaterial = playerMaterials[photonView.ControllerActorNr - 1];
         }
+
+        playerNameText.text = photonView.Controller.NickName;
+        
 
         digParticles.Stop();
 

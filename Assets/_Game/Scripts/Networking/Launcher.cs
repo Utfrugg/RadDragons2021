@@ -11,7 +11,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 {
     // Store these settings in a separate class or struct perhaps
     private string roomName = "EpicRoom";
-    private string gameVersion = "10";
+    private string gameVersion = "11";
 
     [SerializeField] private GameObject controlPanel;
     [SerializeField] private GameObject progressLabel;
@@ -22,6 +22,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnected)
         {
+            var players = GameObject.FindObjectsOfType<PlayerController>();
+            for (int i = players.Length - 1; i >= 0; i--)
+            {
+                Destroy(players[i].gameObject);
+            }
+
             PhotonNetwork.Disconnect();
         }
 

@@ -17,18 +17,24 @@ public class PlayerNameInputField : MonoBehaviour
         string defaultName = "";
         TMP_InputField inputField = GetComponent<TMP_InputField>();
 
-        if (PlayerPrefs.HasKey(playerNamePrefKey) && !PhotonNetwork.IsConnected)
+        if (PlayerPrefs.HasKey(playerNamePrefKey))
         {
             defaultName = PlayerPrefs.GetString(playerNamePrefKey);
             inputField.text = defaultName;
         }
 
-        PhotonNetwork.LocalPlayer.NickName = defaultName;
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.LocalPlayer.NickName = defaultName;
+        }
     }
 
     public void SetPlayerName(string pname)
     {
-        PhotonNetwork.LocalPlayer.NickName = pname + " ";
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.LocalPlayer.NickName = pname + " ";
+        }
         PlayerPrefs.SetString(playerNamePrefKey, pname);
     }
 }
