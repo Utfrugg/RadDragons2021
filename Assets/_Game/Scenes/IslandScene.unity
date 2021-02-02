@@ -20540,6 +20540,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1019620354}
   - component: {fileID: 1019620355}
+  - component: {fileID: 1019620356}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -20573,10 +20574,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e6c7a518ab17340b0458a241c39371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playersNeeded: 2
   treasureIndex: []
   shouldSpawnTreasureForPlayer: -1
   initinnit: 0
   everybodyloaded: 0
+--- !u!114 &1019620356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019620353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 1019620355}
+  viewIdField: 69
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1020353973
 PrefabInstance:
   m_ObjectHideFlags: 0

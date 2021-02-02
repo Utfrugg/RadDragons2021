@@ -83,6 +83,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 mapManager = GameObject.FindObjectOfType<MapManager>();
                 MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
+
+                amIloaded = true;
+                if (photonView.Controller.IsMasterClient)
+                {
+                    PlayerController.playersLoaded[photonView.ControllerActorNr - 1] = true;
+                }
             }
 
             return;
@@ -243,6 +249,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log(goodCount + "/" + playersNeeded + "People loaded into the map");
                 if (goodCount >= playersNeeded) {
                     mapManager.everybodyloaded = true;
+                    mapManager.SecondInitInnit();
                 }
             }
         }
@@ -360,9 +367,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             playersLoaded[regID - 1] = (bool)stream.ReceiveNext();
             bool loadyuuh = (bool)stream.ReceiveNext();
 
-
-            if (!PhotonNetwork.LocalPlayer.IsMasterClient && loadyuuh) {
-                mapManager.everybodyloaded = loadyuuh;
+            if (SceneManager.GetActiveScene().name == "IslandScene" && photonView.Controller.IsMasterClient)
+            {
+                Debug.Log("Checking whether everybody is loaded is being sent over");
+                if (loadyuuh && !mapManager.everybodyloaded)
+                {
+                    Debug.Log("<color=pink>Hey uuuh I heard everybody lloaded, we going??? gamignng???/</color>");
+                    mapManager.everybodyloaded = loadyuuh;
+                    mapManager.SecondInitInnit();
+                }
             }
         }
     }

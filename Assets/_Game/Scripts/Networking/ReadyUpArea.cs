@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class ReadyUpArea : MonoBehaviour
 {
     public int playersReady = 0;
-    public int playersNeeded = 4;
+    public int playersNeeded = 2;
     public UnityEvent onAllPlayersReady = new UnityEvent();
     
     void OnTriggerEnter(Collider other)
