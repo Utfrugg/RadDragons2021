@@ -11,7 +11,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 {
     // Store these settings in a separate class or struct perhaps
     private string roomName = "EpicRoom";
-    private string gameVersion = "7";
+    private string gameVersion = "10";
 
     [SerializeField] private GameObject controlPanel;
     [SerializeField] private GameObject progressLabel;
@@ -20,6 +20,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void Awake()
     {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+
+
         PhotonNetwork.AutomaticallySyncScene = true;
 
         progressLabel.SetActive(false);

@@ -60,6 +60,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem digParticles;
     [SerializeField] public GameObject shovel;
 
+    public int score = 0;
+    [SerializeField] private int stolenScore = 2;
+    [SerializeField] private int normalScore = 1;
+
 
 #if DEBUG
     [SerializeField] private bool dontDoSplitScreen = true;
@@ -81,6 +85,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (scene.name == "IslandScene")
             {
+                score = 0;
+
+                Cursor.lockState = CursorLockMode.Locked;
                 mapManager = GameObject.FindObjectOfType<MapManager>();
                 MapCaptureCam = GameObject.FindObjectOfType<CreateMapTextures>();
 
@@ -89,6 +96,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     PlayerController.playersLoaded[photonView.ControllerActorNr - 1] = true;
                 }
+
+                GameObject.FindObjectOfType<ProgressTracker>().PlayerInnit(this);
             }
 
             return;
@@ -145,7 +154,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
         if (SceneManager.GetActiveScene().name == "LobbyRoom")
         {
             GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
@@ -207,22 +216,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             runParticles.Stop();
         }
 
-        if (photonView.CreatorActorNr != photonView.ControllerActorNr)
-            Debug.Log("CreateActorNR" + photonView.CreatorActorNr + "is NOT equal to ControllerCreatorNR" + photonView.ControllerActorNr);
 
-
-        foreach (var bonk in PhotonNetwork.PlayerList) {
-            if (bonk == PhotonNetwork.LocalPlayer)
-            {
-                Debug.Log("There is a localplayer with ID: " + bonk.ActorNumber);
-            }
-            if (bonk == PhotonNetwork.MasterClient)
-            {
-                Debug.Log("There is a masterplayer with ID: " + bonk.ActorNumber);
-            }
-            if (bonk != PhotonNetwork.LocalPlayer && bonk != PhotonNetwork.MasterClient)
-                Debug.Log("There is another with ID: " + bonk.ActorNumber);
-        }
+        //foreach (var bonk in PhotonNetwork.PlayerList) 
+        //{
+        //    if (bonk == PhotonNetwork.LocalPlayer)
+        //    {
+        //        Debug.Log("There is a localplayer with ID: " + bonk.ActorNumber);
+        //    }
+        //    if (bonk == PhotonNetwork.MasterClient)
+        //    {
+        //        Debug.Log("There is a masterplayer with ID: " + bonk.ActorNumber);
+        //    }
+        //    if (bonk != PhotonNetwork.LocalPlayer && bonk != PhotonNetwork.MasterClient)
+        //        Debug.Log("There is another with ID: " + bonk.ActorNumber);
+        //}
 
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
         {
@@ -234,20 +241,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient)
             {
-                bool stillGood = true;
+                
                 int goodCount = 0;
                 foreach (var goodbool in playersLoaded)
                 {
                     if (goodbool == false)
                     {
-                        stillGood = false;
                         break;
                     }
                     goodCount++;
                 }
 
                 Debug.Log(goodCount + "/" + playersNeeded + "People loaded into the map");
-                if (goodCount >= playersNeeded) {
+                if (goodCount >= playersNeeded) 
+                {
                     mapManager.everybodyloaded = true;
                     mapManager.SecondInitInnit();
                 }
@@ -331,6 +338,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
             if (treasureColliderInRange != null)
             {
+                if (treasureColliderInRange.data.PlayerID == photonView.ControllerActorNr)
+                {
+                    score += normalScore;
+                }
+                else
+                {
+                    score += stolenScore;
+                }
                 treasureColliderInRange.DigUp();
                 treasuresDugUp++;
             }
@@ -355,6 +370,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(isLookingAtMap);
+            stream.SendNext(startDigging);
+            stream.SendNext(score);
+
             stream.SendNext(photonView.ControllerActorNr);
             stream.SendNext(amIloaded);
 
@@ -363,6 +381,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             this.isLookingAtMap = (bool) stream.ReceiveNext();
+            startDigging = (bool) stream.ReceiveNext();
+            score = (int) stream.ReceiveNext();
+
             int regID = (int)stream.ReceiveNext();
             playersLoaded[regID - 1] = (bool)stream.ReceiveNext();
             bool loadyuuh = (bool)stream.ReceiveNext();

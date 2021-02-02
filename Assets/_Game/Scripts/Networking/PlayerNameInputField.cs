@@ -17,7 +17,7 @@ public class PlayerNameInputField : MonoBehaviour
         string defaultName = "";
         TMP_InputField inputField = GetComponent<TMP_InputField>();
 
-        if (PlayerPrefs.HasKey(playerNamePrefKey))
+        if (PlayerPrefs.HasKey(playerNamePrefKey) && !PhotonNetwork.IsConnected)
         {
             defaultName = PlayerPrefs.GetString(playerNamePrefKey);
             inputField.text = defaultName;

@@ -105,6 +105,9 @@ MonoBehaviour:
   runParticles: {fileID: 5822868899841500191}
   digParticles: {fileID: 5624289204430657060}
   shovel: {fileID: 8609477362997771627}
+  score: 0
+  stolenScore: 2
+  normalScore: 1
   dontDoSplitScreen: 0
 --- !u!114 &4587417666308127863
 MonoBehaviour:
@@ -384,6 +387,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4458837221767872203}
     m_Modifications:
+    - target: {fileID: 6299474298027498278, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 804
+      objectReference: {fileID: 0}
     - target: {fileID: 7481477954045938865, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
       propertyPath: m_Name
       value: PlayerCanvas
@@ -471,6 +478,18 @@ PrefabInstance:
     - target: {fileID: 7481477954045938868, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481477954045938869, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 4778033338491049954}
+    - target: {fileID: 7481477954045938869, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481477954045938869, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
+      propertyPath: m_PlaneDistance
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
