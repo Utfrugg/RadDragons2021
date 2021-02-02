@@ -89,6 +89,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (scene.name == "IslandScene")
             {
                 score = 0;
+                //Needed for resetting
+                TotalAmountOfPlayers = 0;
 
                 Cursor.lockState = CursorLockMode.Locked;
                 mapManager = GameObject.FindObjectOfType<MapManager>();
