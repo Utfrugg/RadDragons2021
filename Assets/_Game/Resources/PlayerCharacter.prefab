@@ -343,7 +343,8 @@ MonoBehaviour:
   treasuresDugUp: 0
   currentTreasure:
     TreasurePosition: {x: 0, y: 0, z: 0}
-    PlayerID: 0
+    OwningPlayerID: 0
+    DiggingPlayerID: 0
     state: 0
   playerMaterials:
   - {fileID: 2100000, guid: 54ecfc3a63d5113499bf3108fcc91570, type: 2}

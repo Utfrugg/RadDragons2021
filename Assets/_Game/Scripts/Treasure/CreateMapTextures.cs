@@ -29,10 +29,10 @@ public class CreateMapTextures : MonoBehaviour
     }
 
     public void QueueMapGenerate(TreasureData mapToGen){
-        Debug.Log("<color=red>Just queued a Map for PlayerID: " + mapToGen.PlayerID + " at position: " + mapToGen.TreasurePosition + "</color>");
-        if (!playerIDs.Contains(mapToGen.PlayerID))
+        Debug.Log("<color=red>Just queued a Map for PlayerID: " + mapToGen.OwningPlayerID + " at position: " + mapToGen.TreasurePosition + "</color>");
+        if (!playerIDs.Contains(mapToGen.OwningPlayerID))
         {
-            playerIDs.Enqueue(mapToGen.PlayerID);
+            playerIDs.Enqueue(mapToGen.OwningPlayerID);
             maps.Enqueue(mapToGen);
         }
     }
@@ -47,9 +47,9 @@ public class CreateMapTextures : MonoBehaviour
             if (maps.Count > 0)
             {
                 TreasureData currentMap = maps.Peek();
-                Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.PlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
+                Debug.Log("<color=blue>Just generated a Map for PlayerID: " + currentMap.OwningPlayerID + " at position: " + currentMap.TreasurePosition + "</color>");
                 this.transform.position = currentMap.TreasurePosition + new Vector3(0, CameraHeightOffset, 0);
-                this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.PlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
+                this.GetComponent<Camera>().targetTexture = mapManager.GetPlayerFromID(currentMap.OwningPlayerID).map.GetComponentInChildren<TreasureMap>().mapTexture;
                 playerIDs.Dequeue();
                 maps.Dequeue();
             }

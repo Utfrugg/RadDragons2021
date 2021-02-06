@@ -346,7 +346,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
             if (treasureColliderInRange != null)
             {
-                if (treasureColliderInRange.data.PlayerID == photonView.ControllerActorNr)
+                if (treasureColliderInRange.data.OwningPlayerID == photonView.ControllerActorNr)
                 {
                     score += normalScore;
                 }
@@ -354,7 +354,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     score += stolenScore;
                 }
-                treasureColliderInRange.DigUp();
+                treasureColliderInRange.DigUp(photonView.ControllerActorNr);
                 treasuresDugUp++;
             }
         }

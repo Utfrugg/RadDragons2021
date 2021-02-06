@@ -63,7 +63,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     TreasurePosition: {x: 0, y: 0, z: 0}
-    PlayerID: 0
+    OwningPlayerID: 0
+    DiggingPlayerID: 0
     state: 0
 --- !u!114 &-1934028236496031876
 MonoBehaviour:

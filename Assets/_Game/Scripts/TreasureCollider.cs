@@ -9,12 +9,14 @@ using UnityEngine;
 public struct TreasureData
 {
     public Vector3 TreasurePosition;
-    public int PlayerID;
+    public int OwningPlayerID;
+    public int DiggingPlayerID;
     public TreasureState state;
     public TreasureData(Vector3 TreasurePosition, int playerID)
     {
         this.TreasurePosition = TreasurePosition;
-        this.PlayerID = playerID;
+        this.OwningPlayerID = playerID;
+        this.DiggingPlayerID = -1;
         this.state = TreasureState.SPAWNED;
     }
 
@@ -24,13 +26,14 @@ public struct TreasureData
             return false;
 
         return this.TreasurePosition == data.TreasurePosition &&
-               this.PlayerID == data.PlayerID &&
+               this.OwningPlayerID == data.OwningPlayerID &&
+               this.DiggingPlayerID == data.DiggingPlayerID &&
                this.state == data.state;
     }
 
     public bool IsNull()
     {
-        return this.PlayerID == 0;
+        return this.OwningPlayerID == 0;
     }
 }
 
@@ -55,6 +58,7 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
     float timeDigging = 0;
     private void Start()
     {
+        oldState = data.state;
         chest = transform.Find("chest");
         BigX = transform.Find("CrossBonePlane");
         mapManager = GameObject.FindObjectOfType<MapManager>();
@@ -72,23 +76,26 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
         if (other.TryGetComponent(out PlayerController player)) 
             player.treasureColliderInRange = null;
     }
-    public void DigUp()
+    public void DigUp(int diggingPlayer)
     {
         if (data.state == TreasureState.SPAWNED) {
+            data.DiggingPlayerID = diggingPlayer;
             data.state = TreasureState.DIGGING;
             Debug.Log("Treasure Dug Up!");
+
+            photonView.RequestOwnership();
         }
     }
 
     private void Update()
     {
-        if (data.state == TreasureState.DIGGING)
+        if (data.state == TreasureState.DIGGING && data.DiggingPlayerID == photonView.ControllerActorNr)
         {
             if (timeDigging >= timeToBeDug)
             {
                 data.state = TreasureState.DUG_UP;
                 BigX.gameObject.SetActive(false);
-                mapManager.shouldSpawnTreasureForPlayer = data.PlayerID;
+                mapManager.shouldSpawnTreasureForPlayer = data.OwningPlayerID;
             }
 
             timeDigging += Time.deltaTime;
@@ -96,7 +103,8 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
         }
         if (oldState != data.state) {
             photonView.RequestOwnership();
-            mapManager.treasureIndex[data.PlayerID - 1].state = data.state;
+            
+            mapManager.treasureIndex[data.OwningPlayerID - 1].state = data.state;
         }
         oldState = data.state;
     }
@@ -107,17 +115,18 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
         {
             Debug.Log("Sup im gonna send some info");
             stream.SendNext(data.state);
-            stream.SendNext(data.PlayerID);
+            stream.SendNext(data.OwningPlayerID);
+            stream.SendNext(data.DiggingPlayerID);
         }
         else
         {
-            Debug.Log("oh woops i just got some infoe hahahsdhads");
             data.state = (TreasureState)stream.ReceiveNext();
-            data.PlayerID = (int)stream.ReceiveNext();
+            data.OwningPlayerID = (int)stream.ReceiveNext();
+            data.DiggingPlayerID = (int)stream.ReceiveNext();
             if ((mapManager == null) ? false : mapManager.everybodyloaded)
             {
                 oldState = data.state;
-
+                Debug.Log("YO CAN YOU BELIEVE IT SOMEBODY JUST DUG UP A TREASURE AT " +  data.TreasurePosition);
                 if (data.state != TreasureState.SPAWNED)
                 {
                     BigX.gameObject.SetActive(false);
@@ -125,9 +134,17 @@ public class TreasureCollider : MonoBehaviourPunCallbacks, IPunObservable
 
                 if (mapManager.gameObject.activeInHierarchy)
                 {
-                    mapManager.treasureIndex[data.PlayerID - 1].state = data.state;
+                    if (mapManager.treasureIndex[data.OwningPlayerID - 1].TreasurePosition == data.TreasurePosition)
+                    {
+                        mapManager.treasureIndex[data.OwningPlayerID - 1].state = data.state;
+                        mapManager.treasureIndex[data.OwningPlayerID - 1].DiggingPlayerID = data.DiggingPlayerID;
+                    }
                 }
             }
         } 
+    }
+
+    public void IOnPhotonViewOwnerChange() {
+        Debug.Log("<color=yellow>Yarr, treasure at" + data.TreasurePosition + " has been taken ownership of by player " + photonView.OwnerActorNr + " as it state changed from " + oldState + " to " + data.state + "</color>");
     }
 }
