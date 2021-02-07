@@ -47,7 +47,7 @@ public class TreasureSpawner : MonoBehaviourPunCallbacks
     {
         TreasureCollider newTreasure = PhotonNetwork.Instantiate("Treasure", data.TreasurePosition, Quaternion.identity).GetComponent<TreasureCollider>();
         Debug.Log("<color=cyan> Treasure is being Instantiated by: " + PhotonNetwork.LocalPlayer.NickName + " MasterClient: " + PhotonNetwork.MasterClient.NickName + "</color>");
-        Debug.Log("<color=blue> Treasure Data: \npos " + data.TreasurePosition + "\nMapID: " + data.PlayerID + "</color>");
+        Debug.Log("<color=blue> Treasure Data: pos " + data.TreasurePosition + "MapID: " + data.OwningPlayerID + "</color>");
         newTreasure.data = data;
         return newTreasure;
     }
