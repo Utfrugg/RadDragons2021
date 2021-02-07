@@ -10,6 +10,9 @@ public class CreateMapTextures : MonoBehaviour
     private Queue<int> playerIDs = new Queue<int>();
     private MapManager mapManager;
 
+    [SerializeField]
+    private Material ImageEffectMat;
+
     public RenderTexture tempTex;
 
     Camera CameraComponent;
@@ -54,6 +57,11 @@ public class CreateMapTextures : MonoBehaviour
                 maps.Dequeue();
             }
         }
+    }
+
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    {
+        Graphics.Blit(source, destination, ImageEffectMat);
     }
 
     void OnDestroy()
