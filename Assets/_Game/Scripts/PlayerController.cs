@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private PhotonView photonView;
     [SerializeField] private float speed = 10f;
 
-    public int playersNeeded = 2;
     public bool amIloaded;
     public static bool[] playersLoaded = { false, false, false, false };
 
@@ -247,6 +246,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         if (SceneManager.GetActiveScene().name == "IslandScene")
         {
+            int playersNeeded = PhotonNetwork.CurrentRoom.PlayerCount;
             if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient)
             {
                 

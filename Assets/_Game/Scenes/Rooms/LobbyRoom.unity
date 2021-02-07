@@ -1403,8 +1403,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8878765411291651426, guid: df9bb3a19a0b0734492ffe6461c25ead, type: 3}
+      propertyPath: TimeToStart
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878765411291651426, guid: df9bb3a19a0b0734492ffe6461c25ead, type: 3}
       propertyPath: playersNeeded
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8878765411291651429, guid: df9bb3a19a0b0734492ffe6461c25ead, type: 3}
       propertyPath: m_RootOrder

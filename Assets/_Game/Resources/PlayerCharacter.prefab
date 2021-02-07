@@ -333,7 +333,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  playersNeeded: 2
   amIloaded: 0
   mouseSensitivity: 200
   jumpHeight: 1
