@@ -18,6 +18,7 @@ public class AnimStateController : MonoBehaviour
     private int jumpHash;
 
     public ParticleSystem DigParticleSystem;
+    public GameObject digDirtPile;
 
     void Awake()
     {
@@ -38,6 +39,11 @@ public class AnimStateController : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void CreateDiggyHoley()
+    {
+        Instantiate(digDirtPile, transform.position, transform.rotation);
     }
 
     public void DoDigParticlesPlay()

@@ -861,6 +861,7 @@ MonoBehaviour:
   speed: 6
   maxSpeed: 6
   minSpeed: 2
+  digDirtPile: {fileID: 2194936730521966194, guid: 183b07f4acf39814da14278b0e9aeaf7, type: 3}
   amIloaded: 0
   mouseSensitivity: 200
   jumpHeight: 1
@@ -1710,6 +1711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DigParticleSystem: {fileID: 5624289204430657060}
+  digDirtPile: {fileID: 2194936730521966194, guid: 183b07f4acf39814da14278b0e9aeaf7, type: 3}
 --- !u!95 &4175341272690929498
 Animator:
   serializedVersion: 3
