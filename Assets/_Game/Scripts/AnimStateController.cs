@@ -17,6 +17,8 @@ public class AnimStateController : MonoBehaviour
     private int deathHash;
     private int castHash;
 
+    public ParticleSystem DigParticleSystem;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -36,6 +38,11 @@ public class AnimStateController : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void DoDigParticlesPlay()
+    {
+        DigParticleSystem.Play(true);
     }
 
     public void UpdateMoveAnim(float vel)
