@@ -859,10 +859,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
+  maxSpeed: 6
+  minSpeed: 2
   amIloaded: 0
   mouseSensitivity: 200
   jumpHeight: 1
   gravity: -10
+  acceleration: 10
   map: {fileID: 3575068008304808417}
   treasureColliderInRange: {fileID: 0}
   treasuresDugUp: 0

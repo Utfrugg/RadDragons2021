@@ -339,8 +339,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         if (Input.GetButtonDown("Jump") && grounded)
         {
+            animStC.StartJumpAnim();
             velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
-
         }
 
 

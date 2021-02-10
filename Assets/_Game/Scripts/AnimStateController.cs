@@ -15,7 +15,7 @@ public class AnimStateController : MonoBehaviour
     private int velocityHash;
     private int diggingHash;
     private int deathHash;
-    private int castHash;
+    private int jumpHash;
 
     public ParticleSystem DigParticleSystem;
 
@@ -31,7 +31,7 @@ public class AnimStateController : MonoBehaviour
         velocityHash = Animator.StringToHash("Velocity");
         diggingHash = Animator.StringToHash("A_Digging");
         deathHash = Animator.StringToHash("A_GenericDeath01");
-        castHash = Animator.StringToHash("A_GenericCast01");
+        jumpHash = Animator.StringToHash("A_Jump");
     }
 
     // Update is called once per frame
@@ -60,9 +60,9 @@ public class AnimStateController : MonoBehaviour
         animator.Play(deathHash);
     }
 
-    public void StartCastAnim()
+    public void StartJumpAnim()
     {
-        animator.Play(castHash);
+        animator.Play(jumpHash);
     }
 
     public void AttackSuccess()
