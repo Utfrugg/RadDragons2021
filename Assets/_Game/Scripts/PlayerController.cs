@@ -73,8 +73,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private int stolenScore = 2;
     [SerializeField] private int normalScore = 1;
 
-    [SerializeField] private TMP_Text playerNameText;
-
+    [SerializeField] private TMP_Text playerNameplateText;
+    [SerializeField] private TMP_Text playerNameUIText;
+    [SerializeField] private TMP_Text playerScoreUIText;
 
 #if DEBUG
     [SerializeField] private bool dontDoSplitScreen = true;
@@ -159,8 +160,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             rend.sharedMaterial = playerMaterials[photonView.ControllerActorNr - 1];
         }
 
-        playerNameText.text = photonView.Controller.NickName;
-        
+        playerNameplateText.text = photonView.Controller.NickName;
+        playerNameUIText.text = photonView.Controller.NickName;
 
         digParticles.Stop();
 
@@ -404,6 +405,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     score += stolenScore;
                 }
+                playerScoreUIText.text = score.ToString();
                 treasureColliderInRange.DigUp(photonView.ControllerActorNr);
                 treasuresDugUp++;
             }
@@ -442,7 +444,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             this.isLookingAtMap = (bool) stream.ReceiveNext();
             startDigging = (bool) stream.ReceiveNext();
             score = (int) stream.ReceiveNext();
-
+            playerScoreUIText.text = score.ToString();
             int regID = (int)stream.ReceiveNext();
             playersLoaded[regID - 1] = (bool)stream.ReceiveNext();
             bool loadyuuh = (bool)stream.ReceiveNext();
