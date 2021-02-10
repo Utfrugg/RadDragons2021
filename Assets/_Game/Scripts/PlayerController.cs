@@ -22,7 +22,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private CharacterController ccontr;
     private PhotonView photonView;
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float speed = 0;
+    [SerializeField] private float maxSpeed = 6;
+    [SerializeField] private float minSpeed = 2;
+
+    private CharacterController characterController;
 
     public bool amIloaded;
     public static bool[] playersLoaded = { false, false, false, false };
@@ -35,10 +39,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private float gravity = -20f;
-
+    [SerializeField] private float acceleration = 10f;
     [SerializeField] public GameObject map;
     private bool isLookingAtMap = false;
     private bool startDigging = false;
+    private float oldSpeed;
 
     private bool grounded = false;
     private Vector3 velocity = Vector3.zero;
@@ -73,6 +78,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
+        characterController = GetComponent<CharacterController>();
+        oldSpeed = speed;
         animStC = GetComponentInChildren<AnimStateController>();
         playerCam = GetComponentInChildren<Camera>();
         photonView = GetComponent<PhotonView>();
@@ -168,11 +175,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    IEnumerator StopDigParticles()
+    IEnumerator StopDigTimer()
     {
         yield return new WaitForSeconds(4f);
         digParticles.Stop();
         shovel.SetActive(false);
+        speed = oldSpeed;
     }
 
     // Update is called once per frame
@@ -203,10 +211,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         if (startDigging)
         {
+            StartCoroutine(StopDigTimer());
             animStC.StartDiggingAnim();
-            digParticles.Play();
+            speed = 0f;
+            // dont need to do this anymore haha // digParticles.Play();
             shovel.SetActive(true);
-            StartCoroutine(StopDigParticles());
             startDigging = false;
         }
 
@@ -300,9 +309,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
+        if (x > 0f || z > 0f)
+        {
+            if (speed <= maxSpeed)
+            {
+                speed += Time.deltaTime * acceleration;
+
+                if (speed > maxSpeed)
+                {
+                    speed = maxSpeed;
+                }
+            }
+        }
+
+        else
+        {
+            speed = minSpeed;
+        }
+
         Vector3 move = transform.right * x + transform.forward * z;
 
         ccontr.Move(move * speed * Time.deltaTime);
+
 
         velocity.x = move.x * speed * Time.deltaTime;
         velocity.z = move.z * speed * Time.deltaTime;
@@ -310,9 +338,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (Input.GetButtonDown("Jump") && grounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
+
         }
 
+
         velocity.y += gravity * Time.deltaTime;
+
+
 
         ccontr.Move(velocity * Time.deltaTime);
     }
