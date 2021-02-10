@@ -218,8 +218,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             shovel.SetActive(true);
             startDigging = false;
         }
-
-        playerCam.transform.localRotation = cameraRotation;
+        
+        
 
         Vector2 animVelocity = new Vector2(velocity.x, velocity.z);
         animStC.UpdateMoveAnim(animVelocity.magnitude * 10);
@@ -252,6 +252,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
         
         }
+
+        playerCam.transform.localRotation = cameraRotation;
 
         if (SceneManager.GetActiveScene().name == "IslandScene")
         {
