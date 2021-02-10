@@ -10,8 +10,8 @@ public class TreasureMap : MonoBehaviour
     public void InitMapInnit()
     {
         mapTexture = new RenderTexture(256, 256, 16);
-        Material newMaterial = new Material(Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default"));
-        newMaterial.SetTexture("_MainTex", mapTexture);
+        Material newMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        newMaterial.SetTexture("_BaseMap", mapTexture);
         GetComponent<Renderer>().sharedMaterial = newMaterial;
     }
 
