@@ -20,11 +20,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public static GameObject LocalPlayerInstance;
     public static int TotalAmountOfPlayers = 0;
 
+    //Controls
     private CharacterController ccontr;
     private PhotonView photonView;
     [SerializeField] private float speed = 0;
     [SerializeField] private float maxSpeed = 6;
     [SerializeField] private float minSpeed = 2;
+    private bool lockMovement = false;
 
     private CharacterController characterController;
 
@@ -181,6 +183,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         digParticles.Stop();
         shovel.SetActive(false);
         speed = oldSpeed;
+        lockMovement = false;
     }
 
     // Update is called once per frame
@@ -214,6 +217,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             StartCoroutine(StopDigTimer());
             animStC.StartDiggingAnim();
             speed = 0f;
+            lockMovement = true;
             // dont need to do this anymore haha // digParticles.Play();
             shovel.SetActive(true);
             startDigging = false;
@@ -311,42 +315,51 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        if (x > 0f || z > 0f)
+        if (!lockMovement)
         {
-            if (speed <= maxSpeed)
-            {
-                speed += Time.deltaTime * acceleration;
-
-                if (speed > maxSpeed)
+            if (x > 0f || z > 0f || x < 0f || z < 0f)
+            { 
+                if (speed <= maxSpeed)
                 {
-                    speed = maxSpeed;
+                    speed += Time.deltaTime * acceleration;
+
+                    if (speed > maxSpeed)
+                    {
+                        speed = maxSpeed;
+                    }
                 }
+            }
+            else
+            {
+                if (speed >= minSpeed)
+                {
+                    speed -= Time.deltaTime * acceleration;
+
+                    if (speed < minSpeed)
+                    {
+                        speed = minSpeed;
+                    }
+                }
+            }
+
+            Vector3 move = transform.right * x + transform.forward * z;
+            if (move.sqrMagnitude > 1)
+            {
+                float ratio = 1f / move.magnitude;
+                move *= ratio;
+            }
+            ccontr.Move(move * speed * Time.deltaTime);
+
+            velocity.x = move.x * speed * Time.deltaTime;
+            velocity.z = move.z * speed * Time.deltaTime;
+
+            if (Input.GetButtonDown("Jump") && grounded)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
             }
         }
 
-        else
-        {
-            speed = minSpeed;
-        }
-
-        Vector3 move = transform.right * x + transform.forward * z;
-
-        ccontr.Move(move * speed * Time.deltaTime);
-
-
-        velocity.x = move.x * speed * Time.deltaTime;
-        velocity.z = move.z * speed * Time.deltaTime;
-
-        if (Input.GetButtonDown("Jump") && grounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
-
-        }
-
-
         velocity.y += gravity * Time.deltaTime;
-
-
 
         ccontr.Move(velocity * Time.deltaTime);
     }
