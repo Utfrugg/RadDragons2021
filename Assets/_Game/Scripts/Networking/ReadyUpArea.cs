@@ -11,15 +11,17 @@ public class ReadyUpArea : MonoBehaviourPun
 
     public float TimeToStart;
     private float countDown;
+    private bool isLoading = false;
     private void Update()
     {
         int playersConnected = PhotonNetwork.CurrentRoom.PlayerCount;
         bool countingDown = (playersReady == playersConnected && playersConnected > 0);
 
-        if (countingDown)
+        if (countingDown && !isLoading)
         {
             countDown += Time.deltaTime;
             if (countDown > TimeToStart) {
+                isLoading = true;
                 onAllPlayersReady.Invoke();
             }
         }
