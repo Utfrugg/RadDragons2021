@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float minSpeed = 2;
     private bool lockMovement = false;
 
+    public GameObject digDirtPile;
+
     private CharacterController characterController;
 
     public bool amIloaded;
@@ -220,6 +222,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             lockMovement = true;
             // dont need to do this anymore haha // digParticles.Play();
             shovel.SetActive(true);
+
             startDigging = false;
         }
         
@@ -356,6 +359,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (Input.GetButtonDown("Jump") && grounded)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
+                animStC.StartJumpAnim();
             }
         }
 
@@ -390,7 +394,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (Input.GetButtonDown("Fire2"))
         {
             startDigging = true;
-
             if (treasureColliderInRange != null)
             {
                 if (treasureColliderInRange.data.OwningPlayerID == photonView.ControllerActorNr)
@@ -404,6 +407,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 treasureColliderInRange.DigUp(photonView.ControllerActorNr);
                 treasuresDugUp++;
             }
+
         }
     }
 
