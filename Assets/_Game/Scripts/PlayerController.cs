@@ -30,8 +30,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     public GameObject digDirtPile;
 
-    private CharacterController characterController;
-
     public bool amIloaded;
     public static bool[] playersLoaded = { false, false, false, false };
 
@@ -50,7 +48,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private float oldSpeed;
 
     private bool grounded = false;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 velocity = Vector3.zero; //Movement velocity from input
+    private Vector3 lastPos = Vector3.zero; //Last position needed for animation syncing
 
     public TreasureCollider treasureColliderInRange = null;
     public int treasuresDugUp = 0;
@@ -83,7 +82,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
-        characterController = GetComponent<CharacterController>();
         oldSpeed = speed;
         animStC = GetComponentInChildren<AnimStateController>();
         playerCam = GetComponentInChildren<Camera>();
@@ -169,7 +167,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         }
 #endif
-        
+
         ccontr = GetComponent<CharacterController>();
 
         //Disabled for debug for now
@@ -178,6 +176,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             GameObject.FindObjectOfType<ReadyUpArea>().onAllPlayersReady.AddListener(LoadGameScene);
         }
+
+        lastPos = this.transform.position;
     }
 
     IEnumerator StopDigTimer()
@@ -192,18 +192,34 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        //---------------------------------    This is where all player controllers (in the scene) update
+        UpdateForAll();
+
+        //---------------------------------    This is where playercontrollers that are not mine update
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            UpdateForOthers();
+            return;
+        }
+
+        //---------------------------------    This is where only my player controller updates
+        UpdateForMe();
+    }
+
+    private void UpdateForAll()
+    {
         //TODO Use this system to show the map. This way it shows up everywhere
-        if ((isLookingAtMap && map.layer == LayerMask.NameToLayer("OnlyOnMap")) 
+        if ((isLookingAtMap && map.layer == LayerMask.NameToLayer("OnlyOnMap"))
             || (!isLookingAtMap && map.layer == LayerMask.NameToLayer("Default")))
         {
-            if(isLookingAtMap)
+            if (isLookingAtMap)
             {
                 map.layer = LayerMask.NameToLayer("Default");
                 for (int i = 0; i < map.transform.childCount; i++)
                 {
                     map.transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Default");
                 }
-                
+
             }
             else
             {
@@ -217,6 +233,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         if (startDigging)
         {
+            //Debug.Log(this.photonView.Controller.NickName + " is Digging");
             StartCoroutine(StopDigTimer());
             animStC.StartDiggingAnim();
             speed = 0f;
@@ -226,9 +243,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
             startDigging = false;
         }
-        
-        
+    }
 
+    private void UpdateForOthers()
+    {
+        Vector3 vel = this.transform.position - lastPos;
+        animStC.UpdateMoveAnim(vel.magnitude * 10);
+        if (vel.magnitude > 0.0f)
+        {
+            runParticles.Play();
+        }
+        else
+        {
+            runParticles.Stop();
+        }
+
+        lastPos = this.transform.position;
+    }
+
+    private void UpdateForMe()
+    {
         Vector2 animVelocity = new Vector2(velocity.x, velocity.z);
         animStC.UpdateMoveAnim(animVelocity.magnitude * 10);
         if (animVelocity.magnitude > 0.0f)
@@ -240,27 +274,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             runParticles.Stop();
         }
 
-
-        //foreach (var bonk in PhotonNetwork.PlayerList) 
-        //{
-        //    if (bonk == PhotonNetwork.LocalPlayer)
-        //    {
-        //        Debug.Log("There is a localplayer with ID: " + bonk.ActorNumber);
-        //    }
-        //    if (bonk == PhotonNetwork.MasterClient)
-        //    {
-        //        Debug.Log("There is a masterplayer with ID: " + bonk.ActorNumber);
-        //    }
-        //    if (bonk != PhotonNetwork.LocalPlayer && bonk != PhotonNetwork.MasterClient)
-        //        Debug.Log("There is another with ID: " + bonk.ActorNumber);
-        //}
-
-        if (!photonView.IsMine && PhotonNetwork.IsConnected)
-        {
-            return;
-        
-        }
-
         playerCam.transform.localRotation = cameraRotation;
 
         if (SceneManager.GetActiveScene().name == "IslandScene")
@@ -268,7 +281,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             int playersNeeded = PhotonNetwork.CurrentRoom.PlayerCount;
             if (!mapManager.everybodyloaded && PhotonNetwork.LocalPlayer.IsMasterClient)
             {
-                
+
                 int goodCount = 0;
                 foreach (var goodbool in playersLoaded)
                 {
@@ -280,7 +293,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 }
 
                 Debug.Log(goodCount + "/" + playersNeeded + "People loaded into the map");
-                if (goodCount >= playersNeeded) 
+                if (goodCount >= playersNeeded)
                 {
                     mapManager.everybodyloaded = true;
                     mapManager.SecondInitInnit();

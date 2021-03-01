@@ -785,8 +785,8 @@ GameObject:
   - component: {fileID: 4458837221767872212}
   - component: {fileID: 4458837221767872213}
   - component: {fileID: 4458837221767872202}
-  - component: {fileID: 4587417666308127863}
   - component: {fileID: 721046281037715450}
+  - component: {fileID: 4587417666308127863}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -890,6 +890,22 @@ MonoBehaviour:
   playerNameUIText: {fileID: 7481477955276026834}
   playerScoreUIText: {fileID: 4395093064635264569}
   dontDoSplitScreen: 0
+--- !u!114 &721046281037715450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4458837221767872208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &4587417666308127863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -911,27 +927,10 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 4458837221767872202}
   - {fileID: 721046281037715450}
-  - {fileID: 3746793627248740564}
   - {fileID: 4868131047083096633}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &721046281037715450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4458837221767872208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &4657383659077854991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,7 +1297,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6014547650764961255}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cdcd06815c47d30489f70df42db56a48, type: 3}
   m_Name: 
@@ -1675,7 +1674,6 @@ GameObject:
   - component: {fileID: 8003431001348437280}
   - component: {fileID: 6191053637935688746}
   - component: {fileID: 4175341272690929498}
-  - component: {fileID: 3746793627248740564}
   m_Layer: 0
   m_Name: character1@T-Pose 1
   m_TagString: Untagged
@@ -1733,33 +1731,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3746793627248740564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7231152332258979738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 0
-    Name: isDead
-  - Type: 9
-    SynchronizeType: 1
-    Name: Digging
-  - Type: 1
-    SynchronizeType: 1
-    Name: Velocity
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!1 &7418890471536966590
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,14 +2156,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a171500afdaffe94f9ec3fba0edfd32d, type: 3}
---- !u!198 &5822868899841500191 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 5822868899920706467, guid: a171500afdaffe94f9ec3fba0edfd32d, type: 3}
-  m_PrefabInstance: {fileID: 1036623804}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5822868899841500189 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5822868899920706465, guid: a171500afdaffe94f9ec3fba0edfd32d, type: 3}
+  m_PrefabInstance: {fileID: 1036623804}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5822868899841500191 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5822868899920706467, guid: a171500afdaffe94f9ec3fba0edfd32d, type: 3}
   m_PrefabInstance: {fileID: 1036623804}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1405998716
@@ -2300,9 +2271,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
---- !u!114 &7481477955276026834 stripped
+--- !u!114 &4395093064635264569 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7481477954433279406, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4395093066031298629, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
   m_PrefabInstance: {fileID: 1405998716}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -2311,9 +2282,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4395093064635264569 stripped
+--- !u!114 &7481477955276026834 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4395093066031298629, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7481477954433279406, guid: 27355963651859a43bbac71b2b377cd0, type: 3}
   m_PrefabInstance: {fileID: 1405998716}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
