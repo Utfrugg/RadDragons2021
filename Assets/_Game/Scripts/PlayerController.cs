@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] public GameObject map;
     private bool isLookingAtMap = false;
     private bool startDigging = false;
+    private bool isDigging = false;
     private float oldSpeed;
 
     private bool grounded = false;
@@ -187,6 +188,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         shovel.SetActive(false);
         speed = oldSpeed;
         lockMovement = false;
+        startDigging = false;
+        isDigging = false;
     }
 
     // Update is called once per frame
@@ -231,8 +234,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        if (startDigging)
+        if (startDigging && !isDigging)
         {
+            isDigging = true;
             //Debug.Log(this.photonView.Controller.NickName + " is Digging");
             StartCoroutine(StopDigTimer());
             animStC.StartDiggingAnim();
@@ -240,8 +244,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             lockMovement = true;
             // dont need to do this anymore haha // digParticles.Play();
             shovel.SetActive(true);
-
-            startDigging = false;
         }
     }
 

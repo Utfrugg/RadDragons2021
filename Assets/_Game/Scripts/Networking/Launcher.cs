@@ -11,7 +11,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 {
     // Store these settings in a separate class or struct perhaps
     private string roomName = "EpicRoom";
-    private string gameVersion = "12";
+    private string gameVersion = "13";
 
     [SerializeField] private GameObject controlPanel;
     [SerializeField] private GameObject progressLabel;
